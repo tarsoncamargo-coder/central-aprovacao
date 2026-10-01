@@ -1,7 +1,7 @@
 {
-  "name": "Central de Aprovação V6",
+  "name": "Central de Aprovação V7",
   "short_name": "Central",
-  "description": "Plataforma de estudos para concursos com cursos por módulos, banco de questões, revisões e simulados.",
+  "description": "Plataforma de estudos com cursos por módulos, banco de questões e sincronização opcional.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -9,6 +9,11 @@
   "theme_color": "#173d7a",
   "lang": "pt-BR",
   "icons": [
-    {"src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
   ]
 }

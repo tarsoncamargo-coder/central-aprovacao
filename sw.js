@@ -1,4 +1,4 @@
-const CACHE = "central-aprovacao-v6";
+const CACHE = "central-aprovacao-v7";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon.svg"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)));

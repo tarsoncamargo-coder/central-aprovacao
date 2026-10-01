@@ -1,40 +1,29 @@
-# Central de Aprovação V6
+# Central de Aprovação V7
 
 PWA gratuita preparada para GitHub Pages.
 
-## V6 — Banco de Questões por módulo
+## Novidade da V7
+Login e sincronização opcional entre celular e computador usando Supabase.
 
-A estrutura continua:
-**Curso → Matéria → Módulo → Aula/Material**
+### Continua funcionando offline/local
+A Central não depende do Supabase para abrir, estudar ou registrar dados. Sem login, usa o armazenamento do navegador.
 
-Cada pacote de estudo importado para um módulo pode trazer questões autorais e questões de simulado. A V6 reúne essas questões em um Banco de Questões sem perder a origem.
+### Com login
+- criar conta por e-mail e senha;
+- enviar dados para a nuvem;
+- baixar dados da nuvem;
+- sincronização automática após alterações;
+- comparação entre versão local e versão em nuvem;
+- RLS no banco para cada usuário acessar somente os próprios dados.
 
-### Recursos
-- Banco de questões por curso/matéria/módulo.
-- Treino de múltipla escolha dentro da plataforma.
-- Correção imediata no modo treino.
-- Comentário do gabarito.
-- Histórico de tentativas e percentual de acerto.
-- Favoritar questões.
-- Refazer apenas questões erradas.
-- Enviar erro diretamente para o Caderno de Erros.
-- Simulado misto com 10/20/30/40/50 questões.
-- Simulados por curso, matéria ou módulo.
-- No modo simulado, gabarito apenas no final.
-- Resultado do simulado salvo no módulo Simulados.
-- Questões geradas em novos pacotes entram automaticamente no banco.
+## Arquivos novos
+- `config.js` — Project URL e anon/public key (opcionais).
+- `supabase-setup.sql` — cria tabela e políticas RLS.
+- `CONFIGURAR-SUPABASE.md` — guia passo a passo.
 
-## Como gerar questões a partir dos seus materiais sem API paga
-1. Cadastre o curso, matéria, módulo e aula/material.
-2. Cole no conteúdo-base suas anotações, resumo, transcrição autorizada ou trechos que você quer usar no estudo.
-3. Clique em **Preparar módulo para ChatGPT**.
-4. Envie o TXT ao ChatGPT.
-5. O ChatGPT gera um pacote JSON com aula, flashcards, questões e simulado.
-6. Importe o JSON de volta.
-7. As questões aparecem automaticamente no Banco de Questões.
+## Segurança
+Nunca use `service_role` em código de navegador. Use somente a chave anon/public e mantenha RLS habilitado.
 
-## Cursos pagos
-Mantenha vídeos/PDFs protegidos na plataforma original ou em armazenamento privado. A Central pode guardar links, progresso, suas anotações e conteúdos que você forneça legitimamente para fins de estudo pessoal.
-
-## Persistência
-Nesta fase os dados ficam no navegador (localStorage). Use Exportar/Importar backup. A próxima etapa online pode adicionar autenticação e banco gratuito para sincronizar celular e computador.
+## Estrutura de estudos
+Permanece igual à V6:
+Curso → Matéria → Módulo → Aula/Material → Questões → Revisão → Simulado.

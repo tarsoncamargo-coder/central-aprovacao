@@ -51,16 +51,27 @@ label{font-size:12px;font-weight:750;color:var(--muted);display:block;margin-bot
 @media(max-width:950px){.quiz-shell{grid-template-columns:1fr}.sim-config{grid-template-columns:1fr 1fr}}
 @media(max-width:580px){.sim-config{grid-template-columns:1fr}.quiz-question{font-size:16px}}
 
+
+.sync-status{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sync-dot{width:10px;height:10px;border-radius:50%;background:var(--muted)}
+.sync-dot.on{background:var(--good)} .sync-dot.off{background:#b33a3a} .sync-dot.busy{background:#d59b20}
+.auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cloud-card{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--card)}
+.cloud-ok{border-left:4px solid var(--good)} .cloud-warn{border-left:4px solid #d59b20}
+@media(max-width:760px){.auth-grid{grid-template-columns:1fr}}
+
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./config.js"></script>
 </head>
 <body>
-<div class="app"><aside><div class="brand">🎯 Central de Aprovação<small>V6 • banco de questões + simulados por módulo</small></div><div id="nav" class="nav"></div></aside><main>
+<div class="app"><aside><div class="brand">🎯 Central de Aprovação<small>V7 • login + sincronização entre dispositivos</small></div><div id="nav" class="nav"></div></aside><main>
 <div class="top"><div><h1 id="title">Hoje</h1><div id="subtitle" class="muted"></div></div><div class="row"><button class="btn ghost" onclick="showInstallHelp()">📱 Instalar</button><button class="btn ghost" onclick="toggleTheme()">◐ Tema</button><button class="btn alt" onclick="exportData()">Exportar</button><label class="btn ghost" style="cursor:pointer">Importar<input id="importFile" type="file" accept="application/json" style="display:none" onchange="importData(event)"></label></div></div>
-<section id="hoje" class="page active"></section><section id="aulas" class="page"></section><section id="biblioteca" class="page"></section><section id="banco" class="page"></section><section id="planner" class="page"></section><section id="edital" class="page"></section><section id="concursos" class="page"></section><section id="materias" class="page"></section><section id="ciclo" class="page"></section><section id="revisoes" class="page"></section><section id="questoes" class="page"></section><section id="erros" class="page"></section><section id="simulados" class="page"></section><section id="desempenho" class="page"></section><section id="config" class="page"></section>
+<section id="hoje" class="page active"></section><section id="aulas" class="page"></section><section id="biblioteca" class="page"></section><section id="banco" class="page"></section><section id="conta" class="page"></section><section id="planner" class="page"></section><section id="edital" class="page"></section><section id="concursos" class="page"></section><section id="materias" class="page"></section><section id="ciclo" class="page"></section><section id="revisoes" class="page"></section><section id="questoes" class="page"></section><section id="erros" class="page"></section><section id="simulados" class="page"></section><section id="desempenho" class="page"></section><section id="config" class="page"></section>
 </main></div><div id="mobile" class="mobile"></div>
 <script>
 const baseSeed={
- version:6,
+ version:7,
  settings:{daily:60,review:[1,7,30],theme:'light',days:['Seg','Ter','Qua','Qui','Sex','Sáb','Dom']},
  cycle:['Português','Raciocínio Lógico','Administração Pública','Português','Informática','Direito Administrativo','Direito Constitucional','Revisão/Questões'],cycleIndex:0,
  contests:[
@@ -121,12 +132,19 @@ const baseSeed={
  questionAttempts:[],
  quizFavorites:[],
  quizSession:null,
+ _meta:{updatedAt:new Date().toISOString(),device:'local'},
+ cloudSync:{enabled:false,lastSync:null,lastError:null},
 
  sessions:[],questions:[],reviews:[],errors:[],mocks:[]
 };
 function deepClone(x){return JSON.parse(JSON.stringify(x))}
 function migrate(){
- let v6=JSON.parse(localStorage.getItem('centralAprovacaoV6')||'null');if(v6)return v6;
+ let v7=JSON.parse(localStorage.getItem('centralAprovacaoV7')||'null');if(v7)return v7;
+ let v6=JSON.parse(localStorage.getItem('centralAprovacaoV6')||'null');if(v6){
+   if(!v6._meta)v6._meta={updatedAt:new Date().toISOString(),device:'migrated-v6'};
+   if(!v6.cloudSync)v6.cloudSync={enabled:false,lastSync:null,lastError:null};
+   return v6;
+ }
  let v5=JSON.parse(localStorage.getItem('centralAprovacaoV5')||'null');if(v5){if(!v5.questionAttempts)v5.questionAttempts=[];if(!v5.quizFavorites)v5.quizFavorites=[];if(!v5.quizSession)v5.quizSession=null;return v5;}
  let prev=JSON.parse(localStorage.getItem('centralAprovacaoV4')||'null')||JSON.parse(localStorage.getItem('centralAprovacaoV3')||'null')||JSON.parse(localStorage.getItem('centralAprovacaoV2')||'null')||JSON.parse(localStorage.getItem('centralAprovacao')||'null');
  let s=deepClone(baseSeed);
@@ -149,10 +167,10 @@ function migrate(){
 }
 let data=migrate();
 let timerSec=0,timerHandle=null,timerRunning=false;
-const pages=[['hoje','Hoje'],['aulas','🎓 Aulas'],['biblioteca','📚 Cursos & Conteúdos'],['banco','📝 Banco de Questões'],['planner','Planner'],['edital','Edital verticalizado'],['concursos','Concursos'],['materias','Matérias'],['ciclo','Ciclo'],['revisoes','Revisões'],['questoes','Questões'],['erros','Caderno de Erros'],['simulados','Simulados'],['desempenho','Desempenho'],['config','Configurações']];
+const pages=[['hoje','Hoje'],['aulas','🎓 Aulas'],['biblioteca','📚 Cursos & Conteúdos'],['banco','📝 Banco de Questões'],['conta','☁️ Conta & Sync'],['planner','Planner'],['edital','Edital verticalizado'],['concursos','Concursos'],['materias','Matérias'],['ciclo','Ciclo'],['revisoes','Revisões'],['questoes','Questões'],['erros','Caderno de Erros'],['simulados','Simulados'],['desempenho','Desempenho'],['config','Configurações']];
 const $=id=>document.getElementById(id),val=id=>$(id)?.value||'',today=()=>new Date().toISOString().slice(0,10),sum=(a,k)=>a.reduce((s,x)=>s+(+x[k]||0),0),pct=(a,b)=>b?Math.round(a/b*100):0,br=d=>d?new Date(d+'T12:00:00').toLocaleDateString('pt-BR'):'—';
 function days(d){if(!d)return null;let a=new Date();a.setHours(0,0,0,0);return Math.ceil((new Date(d+'T12:00:00')-a)/86400000)}
-function save(){localStorage.setItem('centralAprovacaoV6',JSON.stringify(data));renderAll()}
+function save(){saveNoRender();renderAll()}
 function nav(){$('nav').innerHTML=pages.map((x,i)=>`<button class="${i?'':'active'}" onclick="go('${x[0]}')">${x[1]}</button>`).join('');$('mobile').innerHTML=pages.slice(0,6).map(x=>`<button onclick="go('${x[0]}')">${x[1]}</button>`).join('')}
 function go(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));let i=pages.findIndex(x=>x[0]===id);document.querySelectorAll('.nav button')[i]?.classList.add('active');$('title').textContent=pages[i][1];$('subtitle').textContent=id==='hoje'?new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}):'';window.scrollTo(0,0)}
 function stats(){let q=sum(data.questions,'qty'),h=sum(data.questions,'hits');return{q,h,acc:pct(h,q),mins:sum(data.sessions,'minutes')}}
@@ -385,7 +403,17 @@ function submitCurrentAnswer(){
  saveNoRender();
  renderQuizRunner();
 }
-function saveNoRender(){localStorage.setItem('centralAprovacaoV6',JSON.stringify(data))}
+
+function saveNoRender(skipTimestamp=false){
+ if(!skipTimestamp){
+   if(!data._meta)data._meta={};
+   data._meta.updatedAt=new Date().toISOString();
+   data._meta.device=getDeviceLabel();
+ }
+ localStorage.setItem('centralAprovacaoV7',JSON.stringify(data));
+ if(!skipTimestamp)scheduleCloudSync();
+}
+
 function nextQuiz(){if(quizRuntime.index<quizRuntime.items.length-1){quizRuntime.index++;renderQuizRunner()}else finishQuiz()}
 function prevQuiz(){if(quizRuntime.index>0){quizRuntime.index--;renderQuizRunner()}}
 function goQuiz(i){quizRuntime.index=i;renderQuizRunner()}
@@ -458,6 +486,201 @@ function renderBanco(){
  <div class="card"><h2>Questões por módulo</h2>${moduleRows||'<p class="muted">Ainda não há pacotes com questões. Abra um módulo em Cursos & Conteúdos e gere/importa um pacote de estudo.</p>'}</div>
  <div class="card"><h2>Como o banco cresce</h2><p>Quando eu gerar um novo <b>pacote de estudo</b> para qualquer módulo e você importar o JSON, as questões daquele pacote entram automaticamente aqui — sem misturar a origem. O histórico continua ligado ao curso, matéria, módulo e subassunto.</p></div>`;
 }
+
+// ==================== V7: Login e sincronização ====================
+let sb=null, currentUser=null, syncTimer=null, syncBusy=false;
+
+function getDeviceLabel(){
+ const ua=navigator.userAgent||'';
+ if(/iPhone|iPad|iPod/i.test(ua))return 'iPhone/iPad';
+ if(/Android/i.test(ua))return 'Android';
+ if(/Windows/i.test(ua))return 'Windows';
+ if(/Mac/i.test(ua))return 'Mac';
+ return 'Navegador';
+}
+function getSupabaseConfig(){
+ const globalCfg=window.CENTRAL_SUPABASE||{};
+ const saved=JSON.parse(localStorage.getItem('centralSupabaseConfig')||'{}');
+ return {
+   url:(globalCfg.url||saved.url||'').trim(),
+   anonKey:(globalCfg.anonKey||saved.anonKey||'').trim()
+ };
+}
+function isConfigReady(){
+ const c=getSupabaseConfig();
+ return /^https:\/\/.+\.supabase\.co$/i.test(c.url) && c.anonKey.length>20;
+}
+async function initSupabase(){
+ if(!window.supabase || !isConfigReady())return false;
+ try{
+   const c=getSupabaseConfig();
+   sb=window.supabase.createClient(c.url,c.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+   const {data:{session}}=await sb.auth.getSession();
+   currentUser=session?.user||null;
+   sb.auth.onAuthStateChange((_event,session)=>{
+     currentUser=session?.user||null;
+     if(currentUser){
+       if(!data.cloudSync)data.cloudSync={};
+       data.cloudSync.enabled=true;
+       localStorage.setItem('centralAprovacaoV7',JSON.stringify(data));
+       setTimeout(()=>smartInitialSync(),200);
+     }
+     renderConta();
+   });
+   return true;
+ }catch(e){
+   if(!data.cloudSync)data.cloudSync={};
+   data.cloudSync.lastError=e.message;
+   return false;
+ }
+}
+function saveSupabaseConfig(){
+ const url=val('sb_url').trim(),anonKey=val('sb_key').trim();
+ if(!url||!anonKey)return alert('Preencha a URL do projeto e a chave anon/public.');
+ localStorage.setItem('centralSupabaseConfig',JSON.stringify({url,anonKey}));
+ alert('Configuração salva neste aparelho. Vou inicializar a conexão.');
+ location.reload();
+}
+function clearSupabaseConfig(){
+ if(!confirm('Remover a configuração do Supabase deste aparelho?'))return;
+ localStorage.removeItem('centralSupabaseConfig');
+ location.reload();
+}
+async function signUpCentral(){
+ if(!sb)return alert('Configure o Supabase primeiro.');
+ const email=val('auth_email').trim(),password=val('auth_password');
+ if(!email||password.length<6)return alert('Informe e-mail e uma senha com pelo menos 6 caracteres.');
+ const {data:res,error}=await sb.auth.signUp({email,password});
+ if(error)return alert('Não foi possível criar a conta: '+error.message);
+ alert(res.session?'Conta criada e conectada.':'Conta criada. Confira seu e-mail se o projeto exigir confirmação.');
+}
+async function signInCentral(){
+ if(!sb)return alert('Configure o Supabase primeiro.');
+ const email=val('auth_email').trim(),password=val('auth_password');
+ const {error}=await sb.auth.signInWithPassword({email,password});
+ if(error)return alert('Falha no login: '+error.message);
+ await smartInitialSync();
+ renderAll();
+}
+async function signOutCentral(){
+ if(sb)await sb.auth.signOut();
+ currentUser=null;
+ if(!data.cloudSync)data.cloudSync={};
+ data.cloudSync.enabled=false;
+ localStorage.setItem('centralAprovacaoV7',JSON.stringify(data));
+ renderConta();
+}
+function scheduleCloudSync(){
+ if(!sb||!currentUser||syncBusy)return;
+ clearTimeout(syncTimer);
+ syncTimer=setTimeout(()=>pushCloud(false),1800);
+}
+async function getCloudRow(){
+ if(!sb||!currentUser)return null;
+ const {data:row,error}=await sb.from('user_app_state').select('state,updated_at').eq('user_id',currentUser.id).maybeSingle();
+ if(error)throw error;
+ return row;
+}
+async function pushCloud(showAlert=true){
+ if(!sb||!currentUser){if(showAlert)alert('Faça login para sincronizar.');return false}
+ if(syncBusy)return false;
+ syncBusy=true; renderConta();
+ try{
+   if(!data._meta)data._meta={};
+   data._meta.updatedAt=data._meta.updatedAt||new Date().toISOString();
+   const payload={user_id:currentUser.id,state:data,updated_at:new Date().toISOString()};
+   const {error}=await sb.from('user_app_state').upsert(payload,{onConflict:'user_id'});
+   if(error)throw error;
+   data.cloudSync={enabled:true,lastSync:new Date().toISOString(),lastError:null};
+   localStorage.setItem('centralAprovacaoV7',JSON.stringify(data));
+   if(showAlert)alert('Dados enviados para a nuvem.');
+   return true;
+ }catch(e){
+   data.cloudSync={...(data.cloudSync||{}),lastError:e.message};
+   localStorage.setItem('centralAprovacaoV7',JSON.stringify(data));
+   if(showAlert)alert('Erro ao enviar: '+e.message);
+   return false;
+ }finally{syncBusy=false;renderConta()}
+}
+async function pullCloud(showAlert=true){
+ if(!sb||!currentUser){if(showAlert)alert('Faça login para sincronizar.');return false}
+ if(syncBusy)return false;
+ syncBusy=true; renderConta();
+ try{
+   const row=await getCloudRow();
+   if(!row?.state){if(showAlert)alert('Ainda não há dados na nuvem.');return false}
+   const keepCloud=row.state;
+   keepCloud.cloudSync={enabled:true,lastSync:new Date().toISOString(),lastError:null};
+   data=keepCloud;
+   saveNoRender(true);
+   if(showAlert)alert('Dados da nuvem carregados neste aparelho.');
+   renderAll();
+   return true;
+ }catch(e){
+   data.cloudSync={...(data.cloudSync||{}),lastError:e.message};
+   localStorage.setItem('centralAprovacaoV7',JSON.stringify(data));
+   if(showAlert)alert('Erro ao baixar: '+e.message);
+   return false;
+ }finally{syncBusy=false;renderConta()}
+}
+async function smartInitialSync(){
+ if(!sb||!currentUser||syncBusy)return;
+ try{
+   const row=await getCloudRow();
+   if(!row?.state){await pushCloud(false);return}
+   const cloudTime=new Date(row.state?._meta?.updatedAt||row.updated_at||0).getTime();
+   const localTime=new Date(data?._meta?.updatedAt||0).getTime();
+   if(cloudTime>localTime+1500){
+     const useCloud=confirm('Há dados mais recentes na nuvem. Deseja carregá-los neste aparelho?');
+     if(useCloud)await pullCloud(false); else await pushCloud(false);
+   }else if(localTime>cloudTime+1500){
+     await pushCloud(false);
+   }else{
+     data.cloudSync={enabled:true,lastSync:new Date().toISOString(),lastError:null};
+     localStorage.setItem('centralAprovacaoV7',JSON.stringify(data));
+   }
+ }catch(e){
+   data.cloudSync={...(data.cloudSync||{}),lastError:e.message};
+   localStorage.setItem('centralAprovacaoV7',JSON.stringify(data));
+ }
+}
+function fmtSyncDate(x){
+ if(!x)return 'Nunca';
+ try{return new Date(x).toLocaleString('pt-BR')}catch{return x}
+}
+function renderConta(){
+ const box=document.getElementById('conta'); if(!box)return;
+ const cfg=getSupabaseConfig(),ready=isConfigReady(),logged=!!currentUser;
+ let status=syncBusy?'Sincronizando…':logged?'Conectado':'Somente local';
+ let dot=syncBusy?'busy':logged?'on':'off';
+ box.innerHTML=`
+ <div class="sync-status card"><span class="sync-dot ${dot}"></span><b>${status}</b>
+ <span class="muted">Dispositivo: ${esc(getDeviceLabel())}</span>
+ <span class="muted">Última sincronização: ${fmtSyncDate(data.cloudSync?.lastSync)}</span></div>
+ <div class="auth-grid" style="margin-top:14px">
+   <div class="cloud-card ${ready?'cloud-ok':'cloud-warn'}">
+     <h2>1. Conexão com Supabase</h2>
+     <p class="muted">A URL e a chave <b>anon/public</b> podem ficar no navegador; nunca use a service_role aqui.</p>
+     <label>Project URL</label><input id="sb_url" value="${esc(cfg.url||'')}" placeholder="https://xxxx.supabase.co">
+     <label style="margin-top:8px">Anon/Public key</label><textarea id="sb_key" placeholder="eyJ...">${esc(cfg.anonKey||'')}</textarea>
+     <div class="row" style="margin-top:10px"><button class="btn" onclick="saveSupabaseConfig()">Salvar configuração</button><button class="btn ghost" onclick="clearSupabaseConfig()">Limpar</button></div>
+   </div>
+   <div class="cloud-card ${logged?'cloud-ok':'cloud-warn'}">
+     <h2>2. Sua conta</h2>
+     ${logged?`<p><b>${esc(currentUser.email||'Usuário conectado')}</b></p>
+       <div class="row"><button class="btn" onclick="pushCloud()">Enviar para nuvem</button><button class="btn alt" onclick="pullCloud()">Baixar da nuvem</button><button class="btn ghost" onclick="signOutCentral()">Sair</button></div>`
+       :`<label>E-mail</label><input id="auth_email" type="email" placeholder="seu@email.com">
+         <label style="margin-top:8px">Senha</label><input id="auth_password" type="password" placeholder="mínimo 6 caracteres">
+         <div class="row" style="margin-top:10px"><button class="btn" onclick="signInCentral()">Entrar</button><button class="btn alt" onclick="signUpCentral()">Criar conta</button></div>`}
+   </div>
+ </div>
+ <div class="card" style="margin-top:14px"><h2>Como funciona</h2>
+   <p><b>Sem login:</b> a Central continua funcionando e salvando neste navegador.</p>
+   <p><b>Com login:</b> após mudanças, a Central tenta enviar o estado automaticamente para a nuvem. Ao abrir em outro aparelho, compara as datas e oferece carregar a versão mais nova.</p>
+   <p><b>Backup manual:</b> continue usando Exportar/Importar como segunda camada de segurança.</p>
+   ${data.cloudSync?.lastError?`<div class="explanation"><b>Último erro de sincronização:</b> ${esc(data.cloudSync.lastError)}</div>`:''}
+ </div>`;
+}
 function renderPlanner(){let days=data.settings.days||['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];$('planner').innerHTML=`<div class="card"><div class="row spread"><div><h2>Planner semanal</h2><div class="small muted">É uma referência; o ciclo continua sendo o motor principal se você perder um dia.</div></div><button class="btn alt" onclick="addPlanBlock()">+ Bloco</button></div><div class="week" style="margin-top:12px">${days.map(d=>`<div class="day"><h3>${d}</h3>${(data.planner[d]||[]).map((b,i)=>`<div class="block"><b>${b.subject}</b><br>${b.minutes} min <button class="btn ghost" style="padding:3px 6px;float:right" onclick="delPlan('${d}',${i})">×</button></div>`).join('')||'<span class="small muted">Livre</span>'}</div>`).join('')}</div></div>`}
 function addPlanBlock(){let d=prompt('Dia: Seg, Ter, Qua, Qui, Sex, Sáb ou Dom','Seg');if(!d)return;let s=prompt('Matéria/bloco','Português');if(!s)return;let m=+(prompt('Minutos','60')||60);if(!data.planner[d])data.planner[d]=[];data.planner[d].push({subject:s,minutes:m});save()}function delPlan(d,i){data.planner[d].splice(i,1);save()}
 function renderEdital(){let opts=Object.keys(data.syllabus),selected=val('editalSelect')||opts[0];if(!data.syllabus[selected])selected=opts[0];let list=data.syllabus[selected]||[];let done=list.filter(x=>x[2]).length;$('edital').innerHTML=`<div class="card"><div class="row spread"><div><h2>Edital verticalizado</h2><div class="small muted">Itens iniciais são de planejamento. Só trate como conteúdo oficial quando o edital do concurso estiver confirmado.</div></div><select id="editalSelect" style="width:auto" onchange="renderEdital()">${opts.map(o=>`<option ${o===selected?'selected':''}>${o}</option>`).join('')}</select></div><div style="margin-top:12px"><div class="progress"><span style="width:${pct(done,list.length)}%"></span></div><div class="small muted" style="margin-top:5px">${done}/${list.length} itens concluídos</div></div>${list.map((x,i)=>`<div class="topic"><div><b>${x[0]}</b><div class="small muted">${x[1]}</div></div><span class="badge ${x[2]?'good':''}">${x[2]?'Concluído':'Pendente'}</span><button class="btn ghost" onclick="toggleSyllabus('${selected}',${i})">${x[2]?'Reabrir':'Concluir'}</button></div>`).join('')}<div class="row" style="margin-top:12px"><button class="btn alt" onclick="addSyllabus('${selected}')">+ Item</button></div></div>`}
@@ -488,7 +711,7 @@ if('serviceWorker' in navigator && location.protocol.startsWith('http')){
   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 }
 
-function renderAll(){applyTheme();renderHoje();renderAulas();renderBiblioteca();renderBanco();renderPlanner();renderEdital();renderConcursos();renderMaterias();renderCiclo();renderRevisoes();renderQuestoes();renderErros();renderSimulados();renderDesempenho();renderConfig()}
-nav();renderAll();$('subtitle').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});localStorage.setItem('centralAprovacaoV6',JSON.stringify(data));
+function renderAll(){applyTheme();renderHoje();renderAulas();renderBiblioteca();renderBanco();renderConta();renderPlanner();renderEdital();renderConcursos();renderMaterias();renderCiclo();renderRevisoes();renderQuestoes();renderErros();renderSimulados();renderDesempenho();renderConfig()}
+nav();renderAll();$('subtitle').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});localStorage.setItem('centralAprovacaoV7',JSON.stringify(data));
 </script>
 </body></html>
