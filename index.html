@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Central de Aprovação</title>
+<meta name="theme-color" content="#315da8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Central Aprovação">
+<meta name="description" content="Central de estudos para concursos públicos: ciclo, revisões, questões, simulados e desempenho.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon.svg">
+
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#1f2937;--muted:#6b7280;--line:#e5e7eb;--accent:#315da8;--soft:#edf2fb;--good:#26734d;--warn:#a86b17;--bad:#b53c3c;--shadow:0 2px 12px rgba(0,0,0,.05)}
+[data-theme="dark"]{--bg:#0f172a;--card:#162032;--text:#eef2ff;--muted:#9aa6b2;--line:#2b374a;--accent:#84a7f5;--soft:#213252;--shadow:none}
+*{box-sizing:border-box}html,body{min-height:100%;}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text)}
+.app{display:grid;grid-template-columns:255px 1fr;min-height:100vh}aside{background:var(--card);border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto}.brand{font-size:20px;font-weight:850;margin:2px 8px 18px}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:4px;font-weight:600}.nav button{width:100%;border:0;background:transparent;color:var(--text);padding:10px 12px;border-radius:10px;margin:2px 0;text-align:left;cursor:pointer}.nav button.active,.nav button:hover{background:var(--soft);color:var(--accent)}main{padding:22px max(22px,env(safe-area-inset-right)) 22px max(22px,env(safe-area-inset-left));max-width:1400px;width:100%;margin:auto}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}.top h1{font-size:27px;margin:0}.page{display:none}.page.active{display:block}.grid{display:grid;gap:14px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px;box-shadow:var(--shadow);margin-bottom:14px}.muted{color:var(--muted)}.small{font-size:12px}.metric{font-size:28px;font-weight:850}.badge{display:inline-block;padding:5px 8px;border-radius:999px;background:var(--soft);color:var(--accent);font-size:12px;font-weight:750}.badge.good{background:rgba(38,115,77,.13);color:var(--good)}.badge.warn{background:rgba(168,107,23,.13);color:var(--warn)}.badge.bad{background:rgba(181,60,60,.12);color:var(--bad)}
+.btn{border:0;border-radius:10px;padding:9px 12px;background:var(--accent);color:white;font-weight:750;cursor:pointer}.btn.alt{background:var(--soft);color:var(--accent)}.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}.btn.danger{background:var(--bad)}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.spread{justify-content:space-between}.progress{height:9px;background:var(--line);border-radius:99px;overflow:hidden}.progress span{display:block;height:100%;background:var(--accent)}
+label{font-size:12px;font-weight:750;color:var(--muted);display:block;margin-bottom:4px}input,select,textarea{width:100%;padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--text)}textarea{min-height:80px}.form{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}table{width:100%;border-collapse:collapse;font-size:13px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}.scroll{overflow:auto}.cycle{display:flex;gap:8px;flex-wrap:wrap}.step{border:1px solid var(--line);padding:10px 12px;border-radius:10px;background:var(--card)}.step.current{border-color:var(--accent);box-shadow:0 0 0 2px var(--soft)}.timer{font-size:46px;font-weight:850;letter-spacing:1px}.week{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:8px;overflow:auto}.day{min-height:150px;border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--card)}.day h3{margin:0 0 8px;font-size:14px}.block{border-left:4px solid var(--accent);padding:7px 8px;background:var(--soft);border-radius:8px;margin-bottom:6px;font-size:12px}.topic{display:grid;grid-template-columns:1fr 130px 90px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}.score{font-size:12px;font-weight:800}.high{color:var(--bad)}.mid{color:var(--warn)}.low{color:var(--good)}.callout{border-left:4px solid var(--accent);padding:10px 12px;background:var(--soft);border-radius:8px}.mobile{display:none}
+.lesson-grid{display:grid;grid-template-columns:320px 1fr;gap:14px}.lesson-list{max-height:72vh;overflow:auto}.lesson-item{padding:10px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer;background:var(--card)}.lesson-item.active,.lesson-item:hover{border-color:var(--accent);background:var(--soft)}.lesson-content h3{margin:16px 0 7px}.flashcard{border:1px dashed var(--line);border-radius:10px;padding:12px;margin:8px 0;background:var(--card)}.resource-card{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0}.video-wrap{position:relative;padding-top:56.25%;border-radius:12px;overflow:hidden;background:#000;margin-top:10px}.video-wrap iframe,.video-wrap video{position:absolute;inset:0;width:100%;height:100%;border:0}.copyright-note{border-left:4px solid var(--warn);padding:10px 12px;background:rgba(168,107,23,.08);border-radius:8px}.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.tabs button{border:1px solid var(--line);background:var(--card);color:var(--text);padding:7px 10px;border-radius:999px;cursor:pointer}.tabs button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media(max-width:950px){.lesson-grid{grid-template-columns:1fr}.lesson-list{max-height:none}.app{grid-template-columns:1fr;min-height:100dvh}aside{display:none}main{padding:max(12px,env(safe-area-inset-top)) 12px calc(82px + env(safe-area-inset-bottom));margin:0;max-width:none}.top{margin:0 0 14px}.top h1{font-size:30px;line-height:1.05}.g2,.g3,.g4,.form{grid-template-columns:1fr}.mobile{display:flex;position:fixed;bottom:0;left:0;right:0;padding-bottom:env(safe-area-inset-bottom);background:var(--card);border-top:1px solid var(--line);z-index:10;overflow:auto}.mobile button{min-width:86px;flex:1;border:0;background:transparent;color:var(--text);padding:10px 5px;font-size:11px}.top{align-items:flex-start;flex-direction:column}.week{grid-template-columns:repeat(7,155px)}.topic{grid-template-columns:1fr}.timer{font-size:38px}}
+
+.course-tree{display:grid;grid-template-columns:330px 1fr;gap:14px}
+.tree-course,.tree-subject,.tree-module,.tree-lesson{border:1px solid var(--line);border-radius:10px;margin:7px 0;background:var(--card)}
+.tree-course>summary,.tree-subject>summary,.tree-module>summary{padding:10px;cursor:pointer;font-weight:800}
+.tree-subject{margin-left:10px}.tree-module{margin-left:20px}.tree-lesson{margin-left:30px;padding:10px;cursor:pointer}
+.tree-lesson.active{border-color:var(--accent);background:var(--soft)}
+.module-pack{border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:12px;background:var(--card)}
+.ai-note{border-left:4px solid var(--good);padding:10px 12px;background:rgba(38,115,77,.08);border-radius:8px}
+.path-chip{font-size:12px;color:var(--muted);margin:4px 0 10px}
+@media(max-width:950px){.course-tree{grid-template-columns:1fr}.tree-subject{margin-left:6px}.tree-module{margin-left:12px}.tree-lesson{margin-left:18px}}
+
+
+.quiz-shell{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:14px}
+.quiz-question{font-size:18px;line-height:1.55;font-weight:700;margin:10px 0 16px}
+.quiz-option{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;padding:12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--text);cursor:pointer;margin:8px 0}
+.quiz-option:hover{border-color:var(--accent);background:var(--soft)}
+.quiz-option.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--soft)}
+.quiz-option.correct{border-color:var(--good);background:rgba(38,115,77,.09)}
+.quiz-option.wrong{border-color:#b33a3a;background:rgba(179,58,58,.08)}
+.quiz-letter{font-weight:900;min-width:24px}
+.quiz-nav{display:flex;gap:6px;flex-wrap:wrap}
+.quiz-dot{width:34px;height:34px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:8px;cursor:pointer;font-weight:800}
+.quiz-dot.current{border-color:var(--accent);background:var(--soft);color:var(--accent)}
+.quiz-dot.ok{background:rgba(38,115,77,.12);color:var(--good)}
+.quiz-dot.bad{background:rgba(179,58,58,.10);color:#b33a3a}
+.explanation{padding:12px;border-left:4px solid var(--accent);background:var(--soft);border-radius:8px;margin-top:12px}
+.bank-row{display:grid;grid-template-columns:1fr auto;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.sim-config{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media(max-width:950px){.quiz-shell{grid-template-columns:1fr}.sim-config{grid-template-columns:1fr 1fr}}
+@media(max-width:580px){.sim-config{grid-template-columns:1fr}.quiz-question{font-size:16px}}
+
+</style>
+</head>
+<body>
+<div class="app"><aside><div class="brand">🎯 Central de Aprovação<small>V6 • banco de questões + simulados por módulo</small></div><div id="nav" class="nav"></div></aside><main>
+<div class="top"><div><h1 id="title">Hoje</h1><div id="subtitle" class="muted"></div></div><div class="row"><button class="btn ghost" onclick="showInstallHelp()">📱 Instalar</button><button class="btn ghost" onclick="toggleTheme()">◐ Tema</button><button class="btn alt" onclick="exportData()">Exportar</button><label class="btn ghost" style="cursor:pointer">Importar<input id="importFile" type="file" accept="application/json" style="display:none" onchange="importData(event)"></label></div></div>
+<section id="hoje" class="page active"></section><section id="aulas" class="page"></section><section id="biblioteca" class="page"></section><section id="banco" class="page"></section><section id="planner" class="page"></section><section id="edital" class="page"></section><section id="concursos" class="page"></section><section id="materias" class="page"></section><section id="ciclo" class="page"></section><section id="revisoes" class="page"></section><section id="questoes" class="page"></section><section id="erros" class="page"></section><section id="simulados" class="page"></section><section id="desempenho" class="page"></section><section id="config" class="page"></section>
+</main></div><div id="mobile" class="mobile"></div>
+<script>
+const baseSeed={
+ version:6,
+ settings:{daily:60,review:[1,7,30],theme:'light',days:['Seg','Ter','Qua','Qui','Sex','Sáb','Dom']},
+ cycle:['Português','Raciocínio Lógico','Administração Pública','Português','Informática','Direito Administrativo','Direito Constitucional','Revisão/Questões'],cycleIndex:0,
+ contests:[
+  {org:'BACEN',cargo:'Técnico do Banco Central',status:'🟢 Autorizado / em preparação',school:'Nível médio',salary:'R$ 8.300,00',place:'Nacional',exam:'',deadline:'',priority:'Principal',sphere:'Federal'},
+  {org:'TCE-GO',cargo:'Técnico de Controle Externo Administrativo',status:'🟢 Edital publicado',school:'Nível médio',salary:'R$ 11.862,19',place:'Goiânia/GO',exam:'2027-01-17',deadline:'2026-11-06',priority:'Missão',sphere:'Estadual'},
+  {org:'ATA/MF',cargo:'Assistente Técnico-Administrativo',status:'⚪ Sem novo edital confirmado',school:'Nível médio',salary:'A definir',place:'A definir',exam:'',deadline:'',priority:'Radar',sphere:'Federal'},
+  {org:'TJSP',cargo:'Escrevente Técnico Judiciário',status:'🟡 Em estudos / radar',school:'Nível médio',salary:'A conferir no próximo edital',place:'SP',exam:'',deadline:'',priority:'Radar',sphere:'Estadual'},
+  {org:'TJPR',cargo:'Técnico Judiciário',status:'🔵 Concurso em andamento/validade',school:'Nível médio',salary:'Último edital ~R$ 9,5 mil',place:'PR',exam:'',deadline:'',priority:'Radar',sphere:'Estadual'},
+  {org:'Banco do Brasil',cargo:'Escriturário',status:'⚪ Expectativa / sem edital oficial',school:'Nível médio',salary:'A definir',place:'Nacional',exam:'',deadline:'',priority:'Radar',sphere:'Federal'},
+  {org:'INSS',cargo:'Cargo de nível médio a confirmar no próximo edital',status:'🟡 Radar',school:'A confirmar',salary:'A definir',place:'Nacional',exam:'',deadline:'',priority:'Radar',sphere:'Federal'},
+  {org:'PRF Administrativo',cargo:'Área administrativa',status:'🟡 Radar',school:'Nível médio a confirmar',salary:'A definir',place:'Nacional',exam:'',deadline:'',priority:'Radar',sphere:'Federal'},
+  {org:'BNDES',cargo:'Possível cargo de nível médio',status:'🟡 Em estudos',school:'A confirmar',salary:'A definir',place:'Nacional',exam:'',deadline:'',priority:'Radar',sphere:'Federal'},
+  {org:'Senado Federal',cargo:'Técnico Legislativo',status:'🟡 Radar',school:'Nível médio em especialidades compatíveis',salary:'Elevada / a confirmar',place:'Brasília/DF',exam:'',deadline:'',priority:'Radar',sphere:'Federal'},
+  {org:'Câmara de Maringá',cargo:'Assistente Administrativo / Legislativo',status:'🟠 Banca definida / acompanhar',school:'Nível médio',salary:'A confirmar no edital',place:'Maringá/PR',exam:'',deadline:'',priority:'Radar',sphere:'Municipal'}
+ ],
+ subjects:[
+  {name:'Português',importance:5,confidence:2,topics:[['Interpretação de textos','estudando'],['Sintaxe','não iniciado'],['Pontuação','não iniciado'],['Concordância','não iniciado']]},
+  {name:'Raciocínio Lógico',importance:4,confidence:2,topics:[['Proposições','não iniciado'],['Porcentagem','não iniciado'],['Razão e proporção','não iniciado']]},
+  {name:'Informática',importance:3,confidence:3,topics:[['Segurança da informação','não iniciado'],['Sistemas operacionais','não iniciado'],['Pacote Office','não iniciado']]},
+  {name:'Direito Administrativo',importance:5,confidence:2,topics:[['Princípios','não iniciado'],['Atos administrativos','não iniciado'],['Agentes públicos','não iniciado']]},
+  {name:'Direito Constitucional',importance:4,confidence:2,topics:[['Princípios fundamentais','não iniciado'],['Direitos fundamentais','não iniciado'],['Administração Pública','não iniciado']]},
+  {name:'Administração Pública',importance:4,confidence:2,topics:[['Modelos de administração','não iniciado'],['Gestão pública','não iniciado'],['Atendimento ao cidadão','não iniciado']]}
+ ],
+ syllabus:{
+  'BACEN':[['Português','Base comum inicial',false],['Raciocínio Lógico','Base comum inicial',false],['Informática','Base comum inicial',false],['Direito Administrativo','Base comum inicial',false],['Direito Constitucional','Base comum inicial',false]],
+  'TCE-GO':[['Português','Planejamento inicial — confirmar no edital',false],['Raciocínio Lógico','Planejamento inicial — confirmar no edital',false],['Direito Administrativo','Planejamento inicial — confirmar no edital',false],['Direito Constitucional','Planejamento inicial — confirmar no edital',false],['Redação','Missão de prova',false]],
+  'ATA/MF':[['Português','Base histórica / pré-edital',false],['Raciocínio Lógico','Base histórica / pré-edital',false],['Informática','Base histórica / pré-edital',false],['Administração Pública','Base histórica / pré-edital',false]]
+ },
+ planner:{Seg:[{subject:'Português',minutes:60}],Ter:[{subject:'Raciocínio Lógico',minutes:60}],Qua:[{subject:'Direito Administrativo',minutes:60}],Qui:[{subject:'Português',minutes:60}],Sex:[{subject:'Informática',minutes:60}],Sáb:[{subject:'Questões + revisão',minutes:90}],Dom:[{subject:'Revisão leve / planejamento',minutes:30}]},
+
+ courses:[
+  {id:'central',name:'Central de Aprovação',provider:'Conteúdo autoral',kind:'Próprio',notes:'Aulas originais da Central.'}
+ ],
+ materials:[],
+ lessonProgress:{},
+ lessons:[
+  {id:'pt-interpretacao-01',subject:'Português',topic:'Interpretação de textos',title:'Interpretação de textos — fundamentos',level:'Básico',source:'Central de Aprovação',
+   content:'Interpretar um texto é compreender o que ele afirma, como organiza as ideias e quais conclusões podem ser sustentadas pelo próprio texto. Em prova, o primeiro cuidado é separar informação explícita de inferência. Informação explícita está declarada. Inferência é uma conclusão construída a partir de pistas do texto, sem ultrapassar o que ele permite concluir. Também é importante distinguir tema, ideia central e opinião do autor: o tema é o assunto geral; a ideia central é a afirmação principal sobre esse assunto; e a opinião é uma posição avaliativa do autor quando ela existe.',
+   feynman:'Imagine que o texto diga: “João saiu de casa levando um guarda-chuva”. Você sabe que João levou um guarda-chuva. Você não sabe, só por isso, que estava chovendo. Em interpretação de prova, não acrescente ao texto aquilo que parece provável, mas não foi dito nem pode ser concluído com segurança.',
+   summary:['Leia o comando antes de voltar ao texto.','Diferencie fato explícito de inferência.','Não troque o que o texto diz pelo que você acha razoável.','Localize tema e ideia central.','Desconfie de alternativas absolutas como “sempre”, “nunca” e “somente” quando o texto é mais moderado.'],
+   memorize:['Explícito = está escrito.','Inferência = conclusão sustentada por pistas do texto.','Tema = assunto geral.','Ideia central = principal afirmação desenvolvida.'],
+   traps:['Extrapolação: a alternativa vai além do texto.','Redução: transforma uma ideia parcial em ideia central.','Inversão: troca causa e consequência ou condição e resultado.','Generalização: converte algo específico em regra geral.'],
+   flashcards:[['Qual a diferença entre informação explícita e inferência?','Explícita está declarada; inferência é concluída a partir de pistas textuais.'],['O que é tema?','O assunto geral tratado pelo texto.'],['O que é ideia central?','A principal afirmação ou mensagem desenvolvida sobre o tema.']],
+   quiz:[{q:'Um texto afirma que Ana levou um casaco ao sair. É correto concluir necessariamente que fazia frio?',a:'Não. O casaco é um indício, mas essa conclusão não é necessária sem outras informações.'},{q:'Uma alternativa repete o tema, mas ignora a tese principal. Ela necessariamente expressa a ideia central?',a:'Não. Tema e ideia central não são a mesma coisa.'}]
+  }
+ ],
+
+ studyCourses:[
+  {id:'sc-central',name:'Central de Aprovação',provider:'Conteúdo autoral',kind:'Próprio',notes:'Conteúdo criado para a Central.',subjects:[
+    {id:'sub-pt',name:'Português',modules:[
+      {id:'mod-pt-int',title:'Módulo 01 — Interpretação de Textos',description:'Fundamentos de interpretação para concursos.',lessons:[
+        {id:'sc-pt-int-01',title:'Aula 01 — Fundamentos',type:'Aula da Central',url:'',duration:'30 min',sourceText:'Interpretação de textos: informação explícita, inferência, tema, ideia central e extrapolação.',notes:'',done:false}
+      ],pack:null}
+    ]}
+  ]}
+ ],
+ aiStudyPacks:[],
+ questionAttempts:[],
+ quizFavorites:[],
+ quizSession:null,
+
+ sessions:[],questions:[],reviews:[],errors:[],mocks:[]
+};
+function deepClone(x){return JSON.parse(JSON.stringify(x))}
+function migrate(){
+ let v6=JSON.parse(localStorage.getItem('centralAprovacaoV6')||'null');if(v6)return v6;
+ let v5=JSON.parse(localStorage.getItem('centralAprovacaoV5')||'null');if(v5){if(!v5.questionAttempts)v5.questionAttempts=[];if(!v5.quizFavorites)v5.quizFavorites=[];if(!v5.quizSession)v5.quizSession=null;return v5;}
+ let prev=JSON.parse(localStorage.getItem('centralAprovacaoV4')||'null')||JSON.parse(localStorage.getItem('centralAprovacaoV3')||'null')||JSON.parse(localStorage.getItem('centralAprovacaoV2')||'null')||JSON.parse(localStorage.getItem('centralAprovacao')||'null');
+ let s=deepClone(baseSeed);
+ if(prev){
+  ['contests','subjects','sessions','questions','reviews','errors','mocks','cycle','cycleIndex','planner','syllabus','courses','materials','lessons','lessonProgress','studyCourses','aiStudyPacks'].forEach(k=>{if(prev[k]!=null)s[k]=prev[k]});
+  if(prev.settings)s.settings={...s.settings,...prev.settings};
+  if(!prev.studyCourses && (prev.courses?.length||prev.materials?.length)){
+   const imported={id:'sc-imported',name:'Materiais importados da V4',provider:'Biblioteca anterior',kind:'Importado',notes:'Organize estes itens nos módulos corretos.',subjects:[]};
+   const bySubject={};
+   (prev.materials||[]).forEach(m=>{
+    const sn=m.subject||'Sem matéria';
+    if(!bySubject[sn])bySubject[sn]={id:'sub-'+Date.now()+'-'+Object.keys(bySubject).length,name:sn,modules:[{id:'mod-'+Date.now()+'-'+Object.keys(bySubject).length,title:'Materiais importados',description:'Itens migrados da V4.',lessons:[],pack:null}]};
+    bySubject[sn].modules[0].lessons.push({id:m.id||('lesson-'+Date.now()),title:m.title||'Material',type:m.type||'Material',url:m.url||'',duration:m.duration||'',sourceText:m.notes||'',notes:m.notes||'',done:!!m.watched});
+   });
+   imported.subjects=Object.values(bySubject);
+   if(imported.subjects.length)s.studyCourses.push(imported);
+  }
+ }
+ return s
+}
+let data=migrate();
+let timerSec=0,timerHandle=null,timerRunning=false;
+const pages=[['hoje','Hoje'],['aulas','🎓 Aulas'],['biblioteca','📚 Cursos & Conteúdos'],['banco','📝 Banco de Questões'],['planner','Planner'],['edital','Edital verticalizado'],['concursos','Concursos'],['materias','Matérias'],['ciclo','Ciclo'],['revisoes','Revisões'],['questoes','Questões'],['erros','Caderno de Erros'],['simulados','Simulados'],['desempenho','Desempenho'],['config','Configurações']];
+const $=id=>document.getElementById(id),val=id=>$(id)?.value||'',today=()=>new Date().toISOString().slice(0,10),sum=(a,k)=>a.reduce((s,x)=>s+(+x[k]||0),0),pct=(a,b)=>b?Math.round(a/b*100):0,br=d=>d?new Date(d+'T12:00:00').toLocaleDateString('pt-BR'):'—';
+function days(d){if(!d)return null;let a=new Date();a.setHours(0,0,0,0);return Math.ceil((new Date(d+'T12:00:00')-a)/86400000)}
+function save(){localStorage.setItem('centralAprovacaoV6',JSON.stringify(data));renderAll()}
+function nav(){$('nav').innerHTML=pages.map((x,i)=>`<button class="${i?'':'active'}" onclick="go('${x[0]}')">${x[1]}</button>`).join('');$('mobile').innerHTML=pages.slice(0,6).map(x=>`<button onclick="go('${x[0]}')">${x[1]}</button>`).join('')}
+function go(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));let i=pages.findIndex(x=>x[0]===id);document.querySelectorAll('.nav button')[i]?.classList.add('active');$('title').textContent=pages[i][1];$('subtitle').textContent=id==='hoje'?new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}):'';window.scrollTo(0,0)}
+function stats(){let q=sum(data.questions,'qty'),h=sum(data.questions,'hits');return{q,h,acc:pct(h,q),mins:sum(data.sessions,'minutes')}}
+function subStats(name){let a=data.questions.filter(x=>x.subject===name),q=sum(a,'qty'),h=sum(a,'hits');return{q,acc:pct(h,q)}}
+function prio(s){let st=subStats(s.name),err=100-st.acc,score=s.importance*20+err*.5+(5-s.confidence)*10;let label=score>=120?'Alta':score>=90?'Média':'Baixa';return{score:Math.round(score),label,cls:label==='Alta'?'high':label==='Média'?'mid':'low',acc:st.acc,q:st.q}}
+function badgeStatus(s){let c=s.includes('🟢')||s.includes('🔥')?'good':s.includes('⚪')?'':s.includes('🔴')?'bad':'warn';return `<span class="badge ${c}">${s}</span>`}
+function setDaily(n){data.settings.daily=n;save()}
+function startTimer(){if(timerRunning)return;timerRunning=true;timerHandle=setInterval(()=>{timerSec++;updateTimer()},1000);updateTimer()}
+function pauseTimer(){timerRunning=false;clearInterval(timerHandle);updateTimer()}
+function resetTimer(){pauseTimer();timerSec=0;updateTimer()}
+function updateTimer(){let e=$('timerText');if(!e)return;let h=Math.floor(timerSec/3600),m=Math.floor(timerSec%3600/60),s=timerSec%60;e.textContent=[h,m,s].map(x=>String(x).padStart(2,'0')).join(':');let b=$('timerState');if(b)b.textContent=timerRunning?'Rodando':'Pausado'}
+function finishTimer(){pauseTimer();let mins=Math.max(1,Math.round(timerSec/60)),subject=data.cycle[data.cycleIndex]||'Estudo';let chosen=prompt('Matéria/bloco da sessão:',subject);if(chosen===null)return;let manual=prompt('Minutos estudados:',mins);if(manual===null)return;data.sessions.push({date:today(),subject:chosen,minutes:+manual||mins});timerSec=0;save();alert('Sessão registrada.')}
+function renderHoje(){let st=stats(),main=data.contests.find(x=>x.priority==='Principal'),mission=data.contests.find(x=>x.priority==='Missão'),rev=data.reviews.filter(x=>x.status!=='Concluída'&&x.date<=today()).length,step=data.cycle[data.cycleIndex]||'Português';let dd=mission?.exam?Math.max(0,days(mission.exam)):null;
+ $('hoje').innerHTML=`<div class="grid g4"><div class="card"><span class="badge">🎯 Principal</span><h2>${main?.org||'—'}</h2><div class="small muted">${main?.cargo||''}</div></div><div class="card"><span class="badge warn">⚔️ Missão</span><h2>${mission?.org||'—'}</h2><div class="metric">${dd??'—'}</div><div class="small muted">dias até a prova</div></div><div class="card"><span class="badge good">🔁 Revisões</span><div class="metric">${rev}</div><div class="small muted">pendentes</div></div><div class="card"><span class="badge">📝 Questões</span><div class="metric">${st.acc}%</div><div class="small muted">acerto global • ${st.q} feitas</div></div></div>
+ <div class="grid g2"><div class="card"><h2>O que estudar agora</h2><div class="muted small">Próximo item do ciclo</div><div class="metric" style="font-size:24px">${step}</div><div class="row" style="margin:12px 0"><button class="btn alt" onclick="setDaily(30)">30 min</button><button class="btn alt" onclick="setDaily(60)">60 min</button><button class="btn alt" onclick="setDaily(90)">90+ min</button><span class="muted">Meta ${data.settings.daily} min</span></div><div class="callout small">Sessão padrão: 10% revisão • 40% teoria • 40% questões • 10% caderno de erros.</div></div>
+ <div class="card"><h2>Cronômetro de estudo</h2><div id="timerText" class="timer">00:00:00</div><div id="timerState" class="muted small">Pausado</div><div class="row" style="margin-top:12px"><button class="btn" onclick="startTimer()">Iniciar</button><button class="btn alt" onclick="pauseTimer()">Pausar</button><button class="btn ghost" onclick="resetTimer()">Zerar</button><button class="btn ghost" onclick="finishTimer()">Finalizar e registrar</button></div></div></div>
+ <div class="card"><h2>Motor de estudo</h2><div class="grid g4"><div><b>Pareto dinâmico</b><p class="small muted">Prioriza pelo peso, erros e baixa confiança.</p></div><div><b>Active Recall</b><p class="small muted">Tente lembrar antes de consultar.</p></div><div><b>Repetição espaçada</b><p class="small muted">Revisões em D+${data.settings.review.join(', D+')}.</p></div><div><b>Questões + erros</b><p class="small muted">Teste, corrija e registre a causa.</p></div></div></div>`;updateTimer()}
+
+let activeLessonId='pt-interpretacao-01', lessonTab='aula', activeMaterialId=null;
+function esc(x){return String(x??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function lessonById(id){return data.lessons.find(x=>x.id===id)||data.lessons[0]}
+function lessonProgress(id){return data.lessonProgress[id]||{done:false,notes:'',rating:0}}
+function setLessonTab(t){lessonTab=t;renderAulas()}
+function selectLesson(id){activeLessonId=id;lessonTab='aula';renderAulas()}
+function toggleLessonDone(id){let p=lessonProgress(id);p.done=!p.done;data.lessonProgress[id]=p;if(p.done){let l=lessonById(id);scheduleReviews(l.subject,l.topic)}save()}
+function saveLessonNotes(id){let p=lessonProgress(id);p.notes=val('lessonNotes');data.lessonProgress[id]=p;save()}
+function addOwnLesson(){let subject=prompt('Matéria da aula:','Português');if(!subject)return;let topic=prompt('Assunto:','');if(topic===null)return;let title=prompt('Título da aula:',topic||'Nova aula');if(!title)return;let content=prompt('Cole/escreva suas anotações ou resumo da aula:','')||'';let id='custom-'+Date.now();data.lessons.push({id,subject,topic,title,level:'Personalizada',source:'Material do usuário',content,feynman:'',summary:[],memorize:[],traps:[],flashcards:[],quiz:[]});activeLessonId=id;save();go('aulas')}
+function renderAulas(){if(!data.lessons)data.lessons=[];let l=lessonById(activeLessonId);if(!l){$('aulas').innerHTML='<div class="card">Nenhuma aula cadastrada.</div>';return}let p=lessonProgress(l.id);let body='';
+ if(lessonTab==='aula')body=`<h3>Aula completa</h3><p style="line-height:1.65">${esc(l.content)}</p>`;
+ if(lessonTab==='feynman')body=`<h3>Modo Feynman</h3><p style="line-height:1.65">${esc(l.feynman||'Ainda não há explicação Feynman para esta aula.')}</p>`;
+ if(lessonTab==='resumo')body=`<h3>Resumo de prova</h3>${(l.summary||[]).map(x=>`<div class="callout" style="margin:7px 0">${esc(x)}</div>`).join('')||'<p class="muted">Sem resumo ainda.</p>'}<h3>Decoreba</h3>${(l.memorize||[]).map(x=>`<div>• ${esc(x)}</div>`).join('')}`;
+ if(lessonTab==='pegadinhas')body=`<h3>Pegadinhas</h3>${(l.traps||[]).map(x=>`<div class="copyright-note" style="margin:7px 0">⚠️ ${esc(x)}</div>`).join('')||'<p class="muted">Sem pegadinhas cadastradas.</p>'}`;
+ if(lessonTab==='flashcards')body=`<h3>Flashcards — Active Recall</h3>${(l.flashcards||[]).map((x,i)=>`<details class="flashcard"><summary><b>${i+1}. ${esc(x[0])}</b></summary><p>${esc(x[1])}</p></details>`).join('')||'<p class="muted">Sem flashcards ainda.</p>'}`;
+ if(lessonTab==='quiz')body=`<h3>Teste rápido</h3>${(l.quiz||[]).map((x,i)=>`<details class="flashcard"><summary><b>${i+1}. ${esc(x.q)}</b></summary><p>${esc(x.a)}</p></details>`).join('')||'<p class="muted">Sem questões autorais ainda.</p>'}`;
+ $('aulas').innerHTML=`<div class="row spread"><div><span class="badge">🎓 Aulas</span><div class="small muted">Biblioteca autoral + seus próprios conteúdos</div></div><button class="btn alt" onclick="addOwnLesson()">+ Minha aula/anotação</button></div><div class="lesson-grid" style="margin-top:12px"><div class="card lesson-list"><h2>Aulas</h2>${data.lessons.map(x=>`<div class="lesson-item ${x.id===l.id?'active':''}" onclick="selectLesson('${x.id}')"><b>${esc(x.title)}</b><div class="small muted">${esc(x.subject)} • ${esc(x.topic)} • ${esc(x.level)}</div>${lessonProgress(x.id).done?'<span class="badge good">Concluída</span>':''}</div>`).join('')}</div><div class="card lesson-content"><div class="row spread"><div><span class="badge">${esc(l.subject)}</span><h2 style="margin:8px 0 4px">${esc(l.title)}</h2><div class="small muted">${esc(l.topic)} • ${esc(l.level)} • ${esc(l.source)}</div></div><button class="btn ${p.done?'alt':''}" onclick="toggleLessonDone('${l.id}')">${p.done?'✓ Concluída':'Marcar concluída'}</button></div><div class="tabs" style="margin-top:14px">${[['aula','Aula'],['feynman','Feynman'],['resumo','Resumo'],['pegadinhas','Pegadinhas'],['flashcards','Flashcards'],['quiz','Teste']].map(t=>`<button class="${lessonTab===t[0]?'active':''}" onclick="setLessonTab('${t[0]}')">${t[1]}</button>`).join('')}</div>${body}<h3>Minhas anotações</h3><textarea id="lessonNotes" placeholder="Escreva o que você entendeu com suas próprias palavras...">${esc(p.notes||'')}</textarea><div class="row" style="margin-top:8px"><button class="btn" onclick="saveLessonNotes('${l.id}')">Salvar anotação</button><button class="btn ghost" onclick="scheduleReviews('${esc(l.subject).replace(/'/g,"\\'")}','${esc(l.topic).replace(/'/g,"\\'")}');save()">Agendar D+1/D+7/D+30</button></div></div></div>`}
+function scheduleReviews(subject,topic){let base=new Date();(data.settings.review||[1,7,30]).forEach(d=>{let x=new Date(base);x.setDate(x.getDate()+d);let dt=x.toISOString().slice(0,10);if(!data.reviews.some(r=>r.subject===subject&&r.topic===topic&&r.date===dt))data.reviews.push({subject,topic,date:dt,type:'Active Recall + questões',status:'Pendente',result:''})})}
+
+let activeStudy={courseId:'sc-central',subjectId:'sub-pt',moduleId:'mod-pt-int',lessonId:'sc-pt-int-01'};
+
+function scCourse(id){return (data.studyCourses||[]).find(x=>x.id===id)}
+function scSubject(c,id){return c?.subjects?.find(x=>x.id===id)}
+function scModule(s,id){return s?.modules?.find(x=>x.id===id)}
+function scLesson(m,id){return m?.lessons?.find(x=>x.id===id)}
+function selectStudy(c,s,m,l=''){activeStudy={courseId:c,subjectId:s,moduleId:m,lessonId:l};renderBiblioteca()}
+function studySelection(){
+ let c=scCourse(activeStudy.courseId)||(data.studyCourses||[])[0], s=scSubject(c,activeStudy.subjectId)||c?.subjects?.[0], m=scModule(s,activeStudy.moduleId)||s?.modules?.[0], l=scLesson(m,activeStudy.lessonId)||m?.lessons?.[0];
+ if(c&&s&&m){activeStudy={courseId:c.id,subjectId:s.id,moduleId:m.id,lessonId:l?.id||''}}
+ return {c,s,m,l}
+}
+function ensureDemoQuestionPack(){
+ let c=scCourse('sc-central'),s=scSubject(c,'sub-pt'),m=scModule(s,'mod-pt-int');
+ if(m && !m.pack){
+  m.pack={
+   title:m.title,
+   feynman:'Interpretar é descobrir o que o texto realmente permite concluir. A prova costuma tentar fazer você trocar evidência do texto por suposição.',
+   summary:['Diferencie informação explícita de inferência.','Tema é o assunto geral; ideia central é o que o autor defende ou desenvolve sobre ele.','Evite extrapolações que acrescentem informação não sustentada pelo texto.'],
+   memorize:['Explícito = está escrito.','Inferência = conclusão sustentada por pistas.'],
+   traps:['Confundir possibilidade com certeza.','Marcar alternativa verdadeira no mundo real, mas não sustentada pelo texto.'],
+   flashcards:[['O que é informação explícita?','É a informação apresentada diretamente no texto.'],['O que caracteriza uma inferência válida?','Ela decorre de pistas do texto sem acrescentar uma suposição incompatível.']],
+   questions:[
+    {id:'demo-q1',q:'Um texto afirma que “Marina saiu de casa levando um guarda-chuva”. Qual conclusão é necessariamente válida?',options:['A) Estava chovendo.','B) Marina acreditava que certamente choveria.','C) Marina levou um guarda-chuva.','D) Marina iria caminhar.','E) O dia estava nublado.'],correct:'C',a:'Marina levou um guarda-chuva.',explanation:'A única informação explicitamente garantida pelo enunciado é que Marina levou o guarda-chuva. As demais alternativas acrescentam suposições.',topic:'Informação explícita',difficulty:'básico'},
+    {id:'demo-q2',q:'Em interpretação de textos, extrapolação ocorre quando o candidato:',options:['A) localiza uma informação literal.','B) formula uma conclusão apoiada por pistas suficientes.','C) identifica o tema geral.','D) acrescenta ao texto uma conclusão que ele não sustenta.','E) reconhece uma paráfrase fiel.'],correct:'D',a:'Acrescenta ao texto uma conclusão que ele não sustenta.',explanation:'Extrapolar é ir além do que o texto permite afirmar.',topic:'Extrapolação',difficulty:'básico'},
+    {id:'demo-q3',q:'Qual alternativa descreve melhor a diferença entre tema e ideia central?',options:['A) Tema é sempre uma frase; ideia central, uma palavra.','B) Tema indica o assunto geral; ideia central expressa o ponto principal desenvolvido sobre esse assunto.','C) São sempre sinônimos.','D) Ideia central só existe em textos argumentativos.','E) Tema corresponde necessariamente ao título.'],correct:'B',a:'Tema indica o assunto geral; ideia central expressa o ponto principal desenvolvido sobre esse assunto.',explanation:'O tema responde “sobre o que é o texto?”; a ideia central responde “o que o texto diz principalmente sobre isso?”.',topic:'Tema e ideia central',difficulty:'intermediário'}
+   ],
+   simulation:[],
+   importedAt:new Date().toISOString()
+  };
+ }
+}
+
+function addStudyCourse(){
+ let name=prompt('Nome do curso:','Curso TCE-GO');if(!name)return;
+ let provider=prompt('Plataforma/professor:','')||'';
+ data.studyCourses.push({id:'sc-'+Date.now(),name,provider,kind:'Curso comprado',notes:'',subjects:[]});save()
+}
+function addStudySubject(courseId){
+ let c=scCourse(courseId);if(!c)return;let name=prompt('Matéria:','Direito Administrativo');if(!name)return;
+ let id='sub-'+Date.now();c.subjects.push({id,name,modules:[]});activeStudy={courseId:c.id,subjectId:id,moduleId:'',lessonId:''};save()
+}
+function addStudyModule(courseId,subjectId){
+ let c=scCourse(courseId),s=scSubject(c,subjectId);if(!s)return;let title=prompt('Nome do módulo:','Módulo 01 — Princípios');if(!title)return;
+ let description=prompt('Descrição/assunto do módulo:','')||'';let id='mod-'+Date.now();s.modules.push({id,title,description,lessons:[],pack:null});activeStudy={courseId:c.id,subjectId:s.id,moduleId:id,lessonId:''};save()
+}
+function addStudyLesson(courseId,subjectId,moduleId){
+ let c=scCourse(courseId),s=scSubject(c,subjectId),m=scModule(s,moduleId);if(!m)return;
+ let title=prompt('Título da aula/material:','Aula 01');if(!title)return;
+ let type=prompt('Tipo (Videoaula, PDF, Anotações, Aula da Central):','Videoaula')||'Material';
+ let url=prompt('Link do material (opcional):','')||'';
+ let duration=prompt('Duração (opcional):','')||'';
+ let sourceText=prompt('Cole aqui suas anotações, resumo, transcrição ou trecho do material que poderá servir de base para questões/aula:','')||'';
+ let id='lesson-'+Date.now();m.lessons.push({id,title,type,url,duration,sourceText,notes:'',done:false});
+ activeStudy={courseId:c.id,subjectId:s.id,moduleId:m.id,lessonId:id};save()
+}
+function updateStudyLesson(){
+ let {l}=studySelection();if(!l)return;
+ l.sourceText=val('study_source');l.notes=val('study_notes');l.url=val('study_url');l.duration=val('study_duration');save()
+}
+function toggleStudyLesson(){let {l}=studySelection();if(l){l.done=!l.done;save()}}
+function removeStudyLesson(){
+ let {c,s,m,l}=studySelection();if(!l||!confirm('Excluir esta aula/material?'))return;
+ m.lessons=m.lessons.filter(x=>x.id!==l.id);activeStudy.lessonId='';save()
+}
+function videoEmbed(url){if(!url)return'';let u=url.trim();let m=u.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{6,})/);if(m)return`<div class="video-wrap"><iframe src="https://www.youtube-nocookie.com/embed/${m[1]}" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>`;m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/);if(m)return`<div class="video-wrap"><iframe src="https://player.vimeo.com/video/${m[1]}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>`;if(/\.(mp4|webm|ogg)(\?.*)?$/i.test(u))return`<div class="video-wrap"><video controls src="${esc(u)}"></video></div>`;return''}
+
+function moduleText(m){
+ return (m?.lessons||[]).map((l,i)=>`### ${i+1}. ${l.title}\nTipo: ${l.type}\nAnotações/conteúdo-base:\n${l.sourceText||l.notes||'(sem conteúdo textual cadastrado)'}`).join('\n\n')
+}
+function exportModuleForChatGPT(){
+ let {c,s,m}=studySelection();if(!m)return alert('Selecione um módulo.');
+ let source=moduleText(m);
+ let text=`CENTRAL DE APROVAÇÃO — PACOTE PARA ESTUDO\n\nCurso: ${c.name}\nMatéria: ${s.name}\nMódulo: ${m.title}\n\nOBJETIVO\nUse SOMENTE o conteúdo-base abaixo e conhecimento geral necessário para explicar conceitos, sem reproduzir material protegido extensamente. Crie material didático original para meu estudo.\n\nQuero:\n1. Aula estruturada e didática.\n2. Explicação Feynman.\n3. Resumo de prova.\n4. Pontos de memorização e pegadinhas.\n5. 20 flashcards.\n6. 20 questões autorais de múltipla escolha, preferencialmente A-E, com apenas uma correta, gabarito comentado, subassunto e dificuldade.\n7. Um mini-simulado de 10 questões de múltipla escolha.\n8. Indique lacunas ou pontos que precisam de fonte oficial adicional.\n\nCONTEÚDO-BASE DO MÓDULO\n${source}\n\nAo final, gere também um JSON chamado PACOTE_CENTRAL com este formato:\n{"courseId":"${c.id}","subjectId":"${s.id}","moduleId":"${m.id}","title":"${m.title}","feynman":"","summary":[],"memorize":[],"traps":[],"flashcards":[["pergunta","resposta"]],"questions":[{"id":"q1","q":"enunciado","options":["A) ...","B) ...","C) ...","D) ...","E) ..."],"correct":"A","a":"resposta correta por extenso","explanation":"comentário didático","topic":"subassunto","difficulty":"básico|intermediário|avançado"}],"simulation":[{"id":"s1","q":"enunciado","options":["A) ...","B) ...","C) ...","D) ...","E) ..."],"correct":"A","a":"resposta","explanation":"comentário","topic":"subassunto","difficulty":"intermediário"}]}`;
+ let blob=new Blob([text],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`modulo-${(m.title||'estudo').replace(/[^\w\-]+/g,'-')}.txt`;a.click();URL.revokeObjectURL(a.href)
+}
+function importStudyPack(ev){
+ let f=ev.target.files?.[0];if(!f)return;let r=new FileReader();
+ r.onload=()=>{try{
+  let obj=JSON.parse(r.result);let c=scCourse(obj.courseId),s=scSubject(c,obj.subjectId),m=scModule(s,obj.moduleId);
+  if(!m)throw new Error('Módulo não encontrado');
+  m.pack={title:obj.title||m.title,feynman:obj.feynman||'',summary:obj.summary||[],memorize:obj.memorize||[],traps:obj.traps||[],flashcards:obj.flashcards||[],questions:obj.questions||[],simulation:obj.simulation||[],importedAt:new Date().toISOString()};
+  save();alert('Pacote de estudo importado para o módulo correto.');
+ }catch(e){alert('Pacote inválido: '+e.message)}};r.readAsText(f)
+}
+function packHtml(pack){
+ if(!pack)return`<div class="ai-note"><b>Pacote de estudo ainda não criado.</b><div class="small">Exporte este módulo para o ChatGPT, envie o arquivo aqui na conversa e peça: “Crie o pacote de estudo para este módulo”. Depois importe o JSON gerado.</div></div>`;
+ return `<div class="module-pack"><h3>🧠 Pacote de estudo do módulo</h3><p class="small muted">As questões deste pacote alimentam automaticamente o Banco de Questões da Central.</p>
+ <details open><summary><b>Feynman</b></summary><p>${esc(pack.feynman||'')}</p></details>
+ <details><summary><b>Resumo de prova</b></summary>${(pack.summary||[]).map(x=>`<p>• ${esc(x)}</p>`).join('')}</details>
+ <details><summary><b>Memorização / Pegadinhas</b></summary>${(pack.memorize||[]).map(x=>`<p>🧠 ${esc(x)}</p>`).join('')}${(pack.traps||[]).map(x=>`<p>⚠️ ${esc(x)}</p>`).join('')}</details>
+ <details><summary><b>Flashcards (${(pack.flashcards||[]).length})</b></summary>${(pack.flashcards||[]).map((x,i)=>`<details class="flashcard"><summary>${i+1}. ${esc(x[0])}</summary><p>${esc(x[1])}</p></details>`).join('')}</details>
+ <details><summary><b>Questões autorais (${(pack.questions||[]).length})</b></summary>${(pack.questions||[]).map((x,i)=>`<details class="flashcard"><summary>${i+1}. ${esc(x.q)}</summary><p><b>Resposta:</b> ${esc(x.a)}</p><p>${esc(x.explanation||'')}</p></details>`).join('')}</details>
+ <details><summary><b>Mini-simulado (${(pack.simulation||[]).length})</b></summary>${(pack.simulation||[]).map((x,i)=>`<details class="flashcard"><summary>${i+1}. ${esc(x.q)}</summary><p><b>Resposta:</b> ${esc(x.a)}</p><p>${esc(x.explanation||'')}</p></details>`).join('')}</details>
+ </div>`
+}
+function renderBiblioteca(){
+ if(!data.studyCourses)data.studyCourses=[];
+ let {c,s,m,l}=studySelection();
+ let tree=(data.studyCourses||[]).map(course=>`<details class="tree-course" ${course.id===c?.id?'open':''}><summary>📚 ${esc(course.name)} <span class="small muted">• ${esc(course.provider||'')}</span></summary>
+   <div style="padding:0 8px 8px"><button class="btn ghost" onclick="addStudySubject('${course.id}')">+ Matéria</button>
+   ${(course.subjects||[]).map(sub=>`<details class="tree-subject" ${sub.id===s?.id?'open':''}><summary>📘 ${esc(sub.name)}</summary>
+     <div style="padding:0 8px 8px"><button class="btn ghost" onclick="addStudyModule('${course.id}','${sub.id}')">+ Módulo</button>
+     ${(sub.modules||[]).map(mod=>`<details class="tree-module" ${mod.id===m?.id?'open':''}><summary onclick="selectStudy('${course.id}','${sub.id}','${mod.id}')">📂 ${esc(mod.title)}</summary>
+       <div style="padding:0 8px 8px"><button class="btn ghost" onclick="addStudyLesson('${course.id}','${sub.id}','${mod.id}')">+ Aula/material</button>
+       ${(mod.lessons||[]).map(lesson=>`<div class="tree-lesson ${lesson.id===l?.id?'active':''}" onclick="selectStudy('${course.id}','${sub.id}','${mod.id}','${lesson.id}')">${lesson.done?'✅':'▫️'} <b>${esc(lesson.title)}</b><div class="small muted">${esc(lesson.type)} ${lesson.duration?'• '+esc(lesson.duration):''}</div></div>`).join('')||'<p class="small muted">Sem aulas ainda.</p>'}
+       </div></details>`).join('')||'<p class="small muted">Sem módulos ainda.</p>'}
+     </div></details>`).join('')||'<p class="small muted">Sem matérias ainda.</p>'}
+   </div></details>`).join('');
+ let viewer='<div class="card"><h2>Selecione ou crie um curso</h2><p class="muted">A estrutura mantém seus materiais separados por curso, matéria e módulo.</p></div>';
+ if(c&&s&&m){
+  viewer=`<div class="card"><div class="path-chip">${esc(c.name)} › ${esc(s.name)} › ${esc(m.title)}${l?' › '+esc(l.title):''}</div>
+   <div class="row spread"><div><h2 style="margin:0">${esc(m.title)}</h2><div class="small muted">${esc(m.description||'')}</div></div><div class="row"><button class="btn alt" onclick="addStudyLesson('${c.id}','${s.id}','${m.id}')">+ Aula/material</button><button class="btn" onclick="exportModuleForChatGPT()">🧠 Preparar módulo para ChatGPT</button><label class="btn ghost" style="cursor:pointer">Importar pacote IA<input type="file" accept="application/json" style="display:none" onchange="importStudyPack(event)"></label></div></div>
+   ${l?`<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:14px"><div class="row spread"><div><span class="badge">${esc(l.type)}</span><h3 style="margin:8px 0 3px">${esc(l.title)}</h3></div><button class="btn ${l.done?'alt':''}" onclick="toggleStudyLesson()">${l.done?'✓ Concluída':'Marcar concluída'}</button></div>
+   ${videoEmbed(l.url)}
+   <div class="form" style="margin-top:10px"><div><label>Link da aula/material</label><input id="study_url" value="${esc(l.url||'')}"></div><div><label>Duração</label><input id="study_duration" value="${esc(l.duration||'')}"></div></div>
+   <label style="margin-top:10px">Conteúdo-base para estudo</label><textarea id="study_source" style="min-height:170px" placeholder="Cole suas anotações, resumo, transcrição autorizada ou trechos do material que você quer que sirvam de base para aulas e questões.">${esc(l.sourceText||'')}</textarea>
+   <label style="margin-top:10px">Minhas anotações</label><textarea id="study_notes">${esc(l.notes||'')}</textarea>
+   <div class="row" style="margin-top:8px"><button class="btn" onclick="updateStudyLesson()">Salvar</button>${l.url?`<a class="btn alt" target="_blank" rel="noopener" href="${esc(l.url)}">Abrir plataforma original ↗</a>`:''}<button class="btn ghost" onclick="removeStudyLesson()">Excluir aula</button></div></div>`:'<p class="muted" style="margin-top:14px">Este módulo ainda não tem uma aula selecionada.</p>'}
+   ${packHtml(m.pack)}
+  </div>`
+ }
+ $('biblioteca').innerHTML=`<div class="copyright-note"><b>Seus cursos continuam organizados e privados.</b> Cadastre cada conteúdo dentro do curso, matéria e módulo corretos. Para cursos pagos, mantenha o arquivo/vídeo na plataforma original ou em armazenamento privado; a Central pode guardar o link, suas anotações e o conteúdo textual que você fornecer para estudo.</div>
+ <div class="row" style="margin:12px 0"><button class="btn" onclick="addStudyCourse()">+ Novo curso</button></div>
+ <div class="course-tree"><div class="card"><h2>Meus cursos</h2>${tree||'<p class="muted">Nenhum curso cadastrado.</p>'}</div><div>${viewer}</div></div>
+ <div class="card"><h2>Como usar comigo no ChatGPT sem pagar API</h2><ol><li>Organize seus materiais dentro do módulo certo.</li><li>Cole suas anotações, resumo ou transcrição autorizada em <b>Conteúdo-base</b>.</li><li>Toque em <b>Preparar módulo para ChatGPT</b>.</li><li>Envie o arquivo gerado nesta conversa e peça o pacote de estudo.</li><li>Eu crio aula, Feynman, flashcards, questões e mini-simulado baseados naquele módulo.</li><li>Importe o JSON de volta na Central para ele aparecer exatamente no módulo correspondente.</li></ol></div>`
+}
+
+let quizRuntime={items:[],index:0,answers:{},revealed:{},mode:'practice',title:'',source:'all'};
+
+function normalizeQuestion(q,meta={}){
+ let options=(q.options||[]).map(x=>String(x));
+ let correct=String(q.correct||'').trim().toUpperCase();
+ if(!correct && q.a && options.length){
+  let pos=options.findIndex(o=>o.replace(/^[A-E][\)\.\-:]\s*/i,'').trim().toLowerCase()===String(q.a).trim().toLowerCase());
+  if(pos>=0)correct=String.fromCharCode(65+pos);
+ }
+ return {...q,options,correct,courseId:meta.courseId,courseName:meta.courseName,subjectId:meta.subjectId,subjectName:meta.subjectName,moduleId:meta.moduleId,moduleTitle:meta.moduleTitle,origin:meta.origin||'questions'};
+}
+function allBankQuestions(includeSimulation=true){
+ let out=[];
+ (data.studyCourses||[]).forEach(c=>(c.subjects||[]).forEach(s=>(s.modules||[]).forEach(m=>{
+  if(m.pack){
+   (m.pack.questions||[]).forEach(q=>out.push(normalizeQuestion(q,{courseId:c.id,courseName:c.name,subjectId:s.id,subjectName:s.name,moduleId:m.id,moduleTitle:m.title,origin:'questions'})));
+   if(includeSimulation)(m.pack.simulation||[]).forEach(q=>out.push(normalizeQuestion(q,{courseId:c.id,courseName:c.name,subjectId:s.id,subjectName:s.name,moduleId:m.id,moduleTitle:m.title,origin:'simulation'})));
+  }
+ })));
+ return out;
+}
+function attemptsFor(q){return (data.questionAttempts||[]).filter(a=>a.moduleId===q.moduleId && a.questionId===(q.id||q.q))}
+function latestAttempt(q){let a=attemptsFor(q);return a[a.length-1]||null}
+function isFavorite(q){return (data.quizFavorites||[]).includes(`${q.moduleId}::${q.id||q.q}`)}
+function toggleFavorite(q){
+ let k=`${q.moduleId}::${q.id||q.q}`,i=data.quizFavorites.indexOf(k);
+ if(i>=0)data.quizFavorites.splice(i,1);else data.quizFavorites.push(k);save();renderBanco()
+}
+function moduleBankStats(moduleId){
+ let qs=allBankQuestions(true).filter(q=>q.moduleId===moduleId), ats=(data.questionAttempts||[]).filter(a=>a.moduleId===moduleId);
+ let ok=ats.filter(a=>a.correct).length;
+ return {questions:qs.length,attempts:ats.length,accuracy:pct(ok,ats.length),wrong:ats.filter(a=>!a.correct).length}
+}
+function startQuiz(filter='all',count=10,mode='practice'){
+ let items=allBankQuestions(true);
+ if(filter==='wrong'){
+  let wrongKeys=new Set((data.questionAttempts||[]).filter(a=>!a.correct).map(a=>`${a.moduleId}::${a.questionId}`));
+  items=items.filter(q=>wrongKeys.has(`${q.moduleId}::${q.id||q.q}`));
+ }else if(filter==='favorites'){
+  let fav=new Set(data.quizFavorites||[]);items=items.filter(q=>fav.has(`${q.moduleId}::${q.id||q.q}`));
+ }else if(filter.startsWith('module:')){
+  let mid=filter.slice(7);items=items.filter(q=>q.moduleId===mid);
+ }else if(filter.startsWith('subject:')){
+  let sid=filter.slice(8);items=items.filter(q=>q.subjectId===sid);
+ }else if(filter.startsWith('course:')){
+  let cid=filter.slice(7);items=items.filter(q=>q.courseId===cid);
+ }
+ if(!items.length)return alert('Ainda não há questões disponíveis para esse filtro.');
+ items=items.sort(()=>Math.random()-.5).slice(0,Math.min(+count||10,items.length));
+ quizRuntime={items,index:0,answers:{},revealed:{},mode,title:mode==='simulation'?'Simulado':'Sessão de questões',source:filter};
+ renderQuizRunner();
+}
+function answerQuestion(letter){
+ let q=quizRuntime.items[quizRuntime.index];if(!q)return;
+ quizRuntime.answers[quizRuntime.index]=letter;
+ if(quizRuntime.mode==='practice')submitCurrentAnswer();
+ else renderQuizRunner();
+}
+function submitCurrentAnswer(){
+ let i=quizRuntime.index,q=quizRuntime.items[i],ans=quizRuntime.answers[i];if(!ans)return alert('Selecione uma alternativa.');
+ if(quizRuntime.revealed[i])return;
+ let correct=q.correct?ans===q.correct:false;
+ quizRuntime.revealed[i]=true;
+ data.questionAttempts.push({date:new Date().toISOString(),courseId:q.courseId,subjectId:q.subjectId,moduleId:q.moduleId,questionId:q.id||q.q,answer:ans,correct,correctAnswer:q.correct||q.a||'',topic:q.topic||'',mode:quizRuntime.mode});
+ saveNoRender();
+ renderQuizRunner();
+}
+function saveNoRender(){localStorage.setItem('centralAprovacaoV6',JSON.stringify(data))}
+function nextQuiz(){if(quizRuntime.index<quizRuntime.items.length-1){quizRuntime.index++;renderQuizRunner()}else finishQuiz()}
+function prevQuiz(){if(quizRuntime.index>0){quizRuntime.index--;renderQuizRunner()}}
+function goQuiz(i){quizRuntime.index=i;renderQuizRunner()}
+function finishQuiz(){
+ if(quizRuntime.mode==='simulation'){
+  quizRuntime.items.forEach((q,i)=>{
+   let ans=quizRuntime.answers[i];if(!ans)return;
+   if(!quizRuntime.revealed[i]){
+    let correct=q.correct?ans===q.correct:false;
+    quizRuntime.revealed[i]=true;
+    data.questionAttempts.push({date:new Date().toISOString(),courseId:q.courseId,subjectId:q.subjectId,moduleId:q.moduleId,questionId:q.id||q.q,answer:ans,correct,correctAnswer:q.correct||q.a||'',topic:q.topic||'',mode:'simulation'});
+   }
+  });
+  saveNoRender();
+ }
+ let answered=Object.keys(quizRuntime.answers).length;
+ let correct=quizRuntime.items.reduce((n,q,i)=>n+(quizRuntime.answers[i] && (q.correct?quizRuntime.answers[i]===q.correct:false)?1:0),0);
+ let total=quizRuntime.items.length, acc=pct(correct,total);
+ if(quizRuntime.mode==='simulation'){
+  data.mocks.push({name:`Simulado do Banco — ${new Date().toLocaleDateString('pt-BR')}`,exam:'Banco de Questões da Central',qty:total,hits:correct,minutes:0,date:today(),notes:`Fonte: ${quizRuntime.source}`});
+  saveNoRender();
+ }
+ $('banco').innerHTML=`<div class="card"><span class="badge good">Sessão concluída</span><h2 style="margin-top:10px">${quizRuntime.title}</h2><div class="metrics"><div class="metric"><span>Questões</span><strong>${total}</strong></div><div class="metric"><span>Respondidas</span><strong>${answered}</strong></div><div class="metric"><span>Acertos</span><strong>${correct}</strong></div><div class="metric"><span>Aproveitamento</span><strong>${acc}%</strong></div></div><div class="row" style="margin-top:14px"><button class="btn" onclick="renderBanco()">Voltar ao banco</button><button class="btn alt" onclick="startQuiz('wrong',10,'practice')">Refazer erradas</button></div></div>`;
+}
+function sendToErrorBook(q){
+ let last=latestAttempt(q);
+ let errText=`Questão: ${q.q}${last?` | Minha resposta: ${last.answer}`:''}`;
+ if(!data.errors.some(e=>e.originQuestionId===(q.id||q.q)&&e.moduleId===q.moduleId)){
+  data.errors.push({date:today(),subject:q.subjectName||'',topic:q.topic||q.moduleTitle||'',error:errText,correct:`Gabarito: ${q.correct||q.a||''}. ${q.explanation||''}`,cause:'Conteúdo',reviewed:false,originQuestionId:q.id||q.q,moduleId:q.moduleId});
+  saveNoRender();alert('Questão enviada ao Caderno de Erros.');
+ }else alert('Essa questão já está no Caderno de Erros.');
+}
+function renderQuizRunner(){
+ let q=quizRuntime.items[quizRuntime.index],i=quizRuntime.index,ans=quizRuntime.answers[i],revealed=!!quizRuntime.revealed[i];
+ let optionHtml='';
+ if(q.options?.length){
+  optionHtml=q.options.map((o,idx)=>{
+   let letter=String.fromCharCode(65+idx),cls=ans===letter?' selected':'';
+   if(revealed){if(letter===q.correct)cls+=' correct';else if(ans===letter && ans!==q.correct)cls+=' wrong'}
+   return `<button class="quiz-option${cls}" onclick="answerQuestion('${letter}')"><span class="quiz-letter">${letter}</span><span>${esc(o.replace(/^[A-E][\)\.\-:]\s*/i,''))}</span></button>`
+  }).join('');
+ }else{
+  optionHtml=`<div class="ai-note">Esta questão veio de um pacote antigo sem alternativas interativas.</div><button class="btn" onclick="quizRuntime.revealed[${i}]=true;renderQuizRunner()">Revelar resposta</button>`;
+ }
+ let explanation=revealed?`<div class="explanation"><b>${q.correct?((ans===q.correct?'✅ Correto':'❌ Incorreto')+' — Gabarito '+q.correct):'Resposta'}</b><p>${esc(q.a||'')}</p><p>${esc(q.explanation||'')}</p>${ans!==q.correct?`<button class="btn ghost" onclick='sendToErrorBook(quizRuntime.items[${i}])'>Enviar ao Caderno de Erros</button>`:''}</div>`:'';
+ let dots=quizRuntime.items.map((x,j)=>{let cls=j===i?' current':'';if(quizRuntime.revealed[j])cls+=(quizRuntime.answers[j]===x.correct?' ok':' bad');return `<button class="quiz-dot${cls}" onclick="goQuiz(${j})">${j+1}</button>`}).join('');
+ $('banco').innerHTML=`<div class="quiz-shell"><div class="card">
+ <div class="row spread"><div><span class="badge">${quizRuntime.mode==='simulation'?'🧪 Simulado':'📝 Treino'}</span><div class="path-chip">${esc(q.courseName)} › ${esc(q.subjectName)} › ${esc(q.moduleTitle)} ${q.topic?'› '+esc(q.topic):''}</div></div><button class="btn ghost" onclick='toggleFavorite(quizRuntime.items[${i}])'>${isFavorite(q)?'★ Favorita':'☆ Favoritar'}</button></div>
+ <div class="quiz-question">${i+1}. ${esc(q.q)}</div>${optionHtml}
+ ${quizRuntime.mode==='simulation'?'':(!revealed&&q.options?.length?'<button class="btn" onclick="submitCurrentAnswer()">Corrigir</button>':'')}
+ ${explanation}
+ <div class="row spread" style="margin-top:16px"><button class="btn ghost" onclick="prevQuiz()" ${i===0?'disabled':''}>← Anterior</button><span class="muted">${i+1}/${quizRuntime.items.length}</span><button class="btn" onclick="nextQuiz()">${i===quizRuntime.items.length-1?'Finalizar':'Próxima →'}</button></div>
+ </div><div class="card"><h3>Navegação</h3><div class="quiz-nav">${dots}</div><hr style="border:0;border-top:1px solid var(--line);margin:14px 0"><div class="small muted">${quizRuntime.mode==='simulation'?'No simulado, a correção aparece somente ao finalizar.':'No treino, cada questão é corrigida imediatamente.'}</div><button class="btn alt" style="margin-top:12px;width:100%" onclick="finishQuiz()">Encerrar sessão</button></div></div>`
+}
+function renderBanco(){
+ ensureDemoQuestionPack();
+ let all=allBankQuestions(true), attempts=data.questionAttempts||[], correct=attempts.filter(x=>x.correct).length;
+ let modules=[];
+ (data.studyCourses||[]).forEach(c=>(c.subjects||[]).forEach(s=>(s.modules||[]).forEach(m=>{
+  let st=moduleBankStats(m.id); if(st.questions)modules.push({c,s,m,st})
+ })));
+ let moduleRows=modules.map(x=>`<div class="bank-row"><div><b>${esc(x.m.title)}</b><div class="small muted">${esc(x.c.name)} › ${esc(x.s.name)} • ${x.st.questions} questões • ${x.st.attempts} tentativas • ${x.st.accuracy}% acerto</div></div><button class="btn alt" onclick="startQuiz('module:${x.m.id}',20,'practice')">Estudar</button></div>`).join('');
+ let courseOpts=(data.studyCourses||[]).map(c=>`<option value="course:${c.id}">${esc(c.name)}</option>`).join('');
+ let subjectOpts=[];(data.studyCourses||[]).forEach(c=>(c.subjects||[]).forEach(s=>subjectOpts.push(`<option value="subject:${s.id}">${esc(c.name)} — ${esc(s.name)}</option>`)));
+ $('banco').innerHTML=`<div class="metrics"><div class="metric"><span>Questões disponíveis</span><strong>${all.length}</strong></div><div class="metric"><span>Tentativas</span><strong>${attempts.length}</strong></div><div class="metric"><span>Acertos</span><strong>${correct}</strong></div><div class="metric"><span>Aproveitamento</span><strong>${pct(correct,attempts.length)}%</strong></div></div>
+ <div class="grid2">
+  <div class="card"><h2>Treinar agora</h2><p class="muted">Use as questões geradas a partir dos conteúdos dos seus módulos.</p><div class="row"><button class="btn" onclick="startQuiz('all',10,'practice')">10 questões mistas</button><button class="btn alt" onclick="startQuiz('wrong',10,'practice')">Refazer erradas</button><button class="btn alt" onclick="startQuiz('favorites',10,'practice')">Favoritas</button></div></div>
+  <div class="card"><h2>Montar simulado</h2><div class="sim-config"><div><label>Conteúdo</label><select id="sim_filter"><option value="all">Todos os módulos</option>${courseOpts}${subjectOpts}${modules.map(x=>`<option value="module:${x.m.id}">${esc(x.c.name)} — ${esc(x.m.title)}</option>`).join('')}</select></div><div><label>Questões</label><select id="sim_count"><option>10</option><option>20</option><option>30</option><option>40</option><option>50</option></select></div><div style="display:flex;align-items:end"><button class="btn" onclick="startQuiz(val('sim_filter'),+val('sim_count'),'simulation')">Iniciar simulado</button></div></div><p class="small muted">No modo simulado, o gabarito só aparece depois de finalizar.</p></div>
+ </div>
+ <div class="card"><h2>Questões por módulo</h2>${moduleRows||'<p class="muted">Ainda não há pacotes com questões. Abra um módulo em Cursos & Conteúdos e gere/importa um pacote de estudo.</p>'}</div>
+ <div class="card"><h2>Como o banco cresce</h2><p>Quando eu gerar um novo <b>pacote de estudo</b> para qualquer módulo e você importar o JSON, as questões daquele pacote entram automaticamente aqui — sem misturar a origem. O histórico continua ligado ao curso, matéria, módulo e subassunto.</p></div>`;
+}
+function renderPlanner(){let days=data.settings.days||['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];$('planner').innerHTML=`<div class="card"><div class="row spread"><div><h2>Planner semanal</h2><div class="small muted">É uma referência; o ciclo continua sendo o motor principal se você perder um dia.</div></div><button class="btn alt" onclick="addPlanBlock()">+ Bloco</button></div><div class="week" style="margin-top:12px">${days.map(d=>`<div class="day"><h3>${d}</h3>${(data.planner[d]||[]).map((b,i)=>`<div class="block"><b>${b.subject}</b><br>${b.minutes} min <button class="btn ghost" style="padding:3px 6px;float:right" onclick="delPlan('${d}',${i})">×</button></div>`).join('')||'<span class="small muted">Livre</span>'}</div>`).join('')}</div></div>`}
+function addPlanBlock(){let d=prompt('Dia: Seg, Ter, Qua, Qui, Sex, Sáb ou Dom','Seg');if(!d)return;let s=prompt('Matéria/bloco','Português');if(!s)return;let m=+(prompt('Minutos','60')||60);if(!data.planner[d])data.planner[d]=[];data.planner[d].push({subject:s,minutes:m});save()}function delPlan(d,i){data.planner[d].splice(i,1);save()}
+function renderEdital(){let opts=Object.keys(data.syllabus),selected=val('editalSelect')||opts[0];if(!data.syllabus[selected])selected=opts[0];let list=data.syllabus[selected]||[];let done=list.filter(x=>x[2]).length;$('edital').innerHTML=`<div class="card"><div class="row spread"><div><h2>Edital verticalizado</h2><div class="small muted">Itens iniciais são de planejamento. Só trate como conteúdo oficial quando o edital do concurso estiver confirmado.</div></div><select id="editalSelect" style="width:auto" onchange="renderEdital()">${opts.map(o=>`<option ${o===selected?'selected':''}>${o}</option>`).join('')}</select></div><div style="margin-top:12px"><div class="progress"><span style="width:${pct(done,list.length)}%"></span></div><div class="small muted" style="margin-top:5px">${done}/${list.length} itens concluídos</div></div>${list.map((x,i)=>`<div class="topic"><div><b>${x[0]}</b><div class="small muted">${x[1]}</div></div><span class="badge ${x[2]?'good':''}">${x[2]?'Concluído':'Pendente'}</span><button class="btn ghost" onclick="toggleSyllabus('${selected}',${i})">${x[2]?'Reabrir':'Concluir'}</button></div>`).join('')}<div class="row" style="margin-top:12px"><button class="btn alt" onclick="addSyllabus('${selected}')">+ Item</button></div></div>`}
+function toggleSyllabus(c,i){data.syllabus[c][i][2]=!data.syllabus[c][i][2];save()}function addSyllabus(c){let n=prompt('Matéria/assunto');if(!n)return;let note=prompt('Observação','Item manual');data.syllabus[c].push([n,note,false]);save()}
+function renderConcursos(){let rows=data.contests.map((c,i)=>`<tr><td><b>${c.org}</b><br><span class="small muted">${c.cargo}</span></td><td>${badgeStatus(c.status)}</td><td>${c.school}</td><td>${c.salary}</td><td>${c.place}</td><td>${c.exam?br(c.exam):'—'}</td><td><span class="badge">${c.priority}</span></td><td><button class="btn ghost" onclick="editContest(${i})">Editar</button></td></tr>`).join('');$('concursos').innerHTML=`<div class="card"><div class="row spread"><div><h2>Radar de concursos</h2><div class="small muted">Principal, missão e radares ficam no mesmo lugar.</div></div><button class="btn alt" onclick="addContest()">+ Concurso</button></div></div><div class="card scroll"><table><thead><tr><th>Concurso</th><th>Status</th><th>Escolaridade</th><th>Salário</th><th>Local</th><th>Prova</th><th>Prioridade</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`}
+function addContest(){let org=prompt('Órgão');if(!org)return;let cargo=prompt('Cargo','Nível médio');data.contests.push({org,cargo,status:'⚪ Expectativa fraca',school:'Nível médio',salary:'A definir',place:'A definir',exam:'',deadline:'',priority:'Radar',sphere:'A definir'});data.syllabus[org]=[];save()}function editContest(i){let c=data.contests[i];for(let k of ['org','cargo','status','school','salary','place','exam','deadline','priority','sphere']){let v=prompt(k,c[k]||'');if(v!==null)c[k]=v}save()}
+function renderMaterias(){$('materias').innerHTML=`<div class="grid g2">${data.subjects.map((s,i)=>{let p=prio(s),done=s.topics.filter(t=>t[1]==='dominado').length;return `<div class="card"><div class="row spread"><h2>${s.name}</h2><b class="${p.cls}">${p.label} • ${p.score}</b></div><div class="progress"><span style="width:${pct(done,s.topics.length)}%"></span></div><div class="small muted" style="margin:8px 0">${p.q} questões • ${p.acc}% acertos • confiança ${s.confidence}/5 • importância ${s.importance}/5</div>${s.topics.map((t,j)=>`<div class="row spread" style="border-top:1px solid var(--line);padding:8px 0"><span>${t[0]}</span><select style="width:auto" onchange="topicStatus(${i},${j},this.value)"><option ${t[1]==='não iniciado'?'selected':''}>não iniciado</option><option ${t[1]==='estudando'?'selected':''}>estudando</option><option ${t[1]==='revisando'?'selected':''}>revisando</option><option ${t[1]==='dominado'?'selected':''}>dominado</option></select></div>`).join('')}</div>`}).join('')}</div><div class="card"><h2>Como a prioridade é calculada</h2><div class="callout">Score = importância × 20 + taxa de erro × 0,5 + (5 − confiança) × 10.</div><p class="small muted">Quanto maior o score, mais tempo a matéria merece agora. Isso é o Pareto dinâmico da Central.</p></div>`}
+function topicStatus(i,j,v){data.subjects[i].topics[j][1]=v;if(v==='revisando'||v==='dominado')scheduleReviews(data.subjects[i].name,data.subjects[i].topics[j][0]);save()}function scheduleReviews(subject,topic){data.settings.review.forEach(d=>{let x=new Date();x.setDate(x.getDate()+d);let dt=x.toISOString().slice(0,10);if(!data.reviews.some(r=>r.subject===subject&&r.topic===topic&&r.date===dt))data.reviews.push({subject,topic,date:dt,type:'Active Recall + questões',status:'Pendente',result:''})})}
+function renderCiclo(){$('ciclo').innerHTML=`<div class="card"><h2>Ciclo atual</h2><div class="cycle">${data.cycle.map((x,i)=>`<div class="step ${i===data.cycleIndex?'current':''}">${i+1}. <b>${x}</b>${i===data.cycleIndex?'<div class="small muted">atual</div>':''}</div>`).join('')}</div><div class="row" style="margin-top:12px"><button class="btn" onclick="advanceCycle()">Concluir e avançar</button><button class="btn alt" onclick="addCycle()">+ Item</button></div></div><div class="card small muted">O ciclo evita o problema de “perdi terça, perdi a matéria”. Se não estudar um dia, continue de onde parou.</div>`}function advanceCycle(){data.cycleIndex=(data.cycleIndex+1)%data.cycle.length;save()}function addCycle(){let x=prompt('Novo item');if(x){data.cycle.push(x);save()}}
+function renderRevisoes(){let rows=[...data.reviews].sort((a,b)=>a.date.localeCompare(b.date)).map((r,i)=>`<tr><td>${br(r.date)}</td><td>${r.subject}</td><td>${r.topic}</td><td>${r.type||'Revisão'}</td><td>${r.status}</td><td><button class="btn ghost" onclick="doneReview(${i})">Concluir</button></td></tr>`).join('');$('revisoes').innerHTML=`<div class="card scroll"><table><thead><tr><th>Data</th><th>Matéria</th><th>Assunto</th><th>Tipo</th><th>Status</th><th></th></tr></thead><tbody>${rows||'<tr><td colspan="6" class="muted">Nenhuma revisão agendada. Marque assuntos como revisando/dominado.</td></tr>'}</tbody></table></div>`}function doneReview(i){data.reviews[i].status='Concluída';data.reviews[i].result=prompt('Resultado: fácil, médio ou difícil','médio')||'';save()}
+function renderQuestoes(){$('questoes').innerHTML=`<div class="card"><h2>Registrar questões</h2><div class="form"><div><label>Matéria</label><select id="q_sub">${data.subjects.map(s=>`<option>${s.name}</option>`).join('')}</select></div><div><label>Assunto</label><input id="q_topic"></div><div><label>Quantidade</label><input id="q_qty" type="number"></div><div><label>Acertos</label><input id="q_hits" type="number"></div><div><label>Concurso/banca (opcional)</label><input id="q_exam"></div><div><label>Data</label><input id="q_date" type="date" value="${today()}"></div></div><div style="margin-top:10px"><button class="btn" onclick="addQuestions()">Registrar</button></div></div><div class="card scroll"><table><thead><tr><th>Data</th><th>Matéria</th><th>Assunto</th><th>Qtd.</th><th>Acertos</th><th>Erros</th><th>%</th></tr></thead><tbody>${data.questions.slice().reverse().map(q=>`<tr><td>${br(q.date)}</td><td>${q.subject}</td><td>${q.topic}</td><td>${q.qty}</td><td>${q.hits}</td><td>${q.qty-q.hits}</td><td>${pct(q.hits,q.qty)}%</td></tr>`).join('')||'<tr><td colspan="7" class="muted">Sem registros.</td></tr>'}</tbody></table></div>`}function addQuestions(){let q=+val('q_qty'),h=+val('q_hits');if(!q||h>q)return alert('Confira os números.');data.questions.push({date:val('q_date')||today(),subject:val('q_sub'),topic:val('q_topic'),qty:q,hits:h,exam:val('q_exam')});save()}
+function renderErros(){$('erros').innerHTML=`<div class="card"><h2>Novo erro</h2><div class="form"><div><label>Matéria</label><select id="e_sub">${data.subjects.map(s=>`<option>${s.name}</option>`).join('')}</select></div><div><label>Assunto</label><input id="e_topic"></div><div><label>Erro cometido</label><textarea id="e_error"></textarea></div><div><label>Conceito correto</label><textarea id="e_correct"></textarea></div><div><label>Causa</label><select id="e_cause"><option>Conteúdo</option><option>Distração</option><option>Interpretação</option><option>Cálculo</option><option>Esquecimento</option></select></div></div><div style="margin-top:10px"><button class="btn" onclick="addError()">Adicionar</button></div></div><div class="card scroll"><table><thead><tr><th>Data</th><th>Matéria</th><th>Assunto</th><th>Erro</th><th>Correto</th><th>Causa</th><th>Revisado</th></tr></thead><tbody>${data.errors.slice().reverse().map((e,ri)=>{let idx=data.errors.length-1-ri;return `<tr><td>${br(e.date)}</td><td>${e.subject}</td><td>${e.topic}</td><td>${e.error}</td><td>${e.correct}</td><td>${e.cause}</td><td><button class="btn ghost" onclick="toggleError(${idx})">${e.reviewed?'Sim':'Não'}</button></td></tr>`}).join('')||'<tr><td colspan="7" class="muted">Caderno vazio.</td></tr>'}</tbody></table></div>`}function addError(){data.errors.push({date:today(),subject:val('e_sub'),topic:val('e_topic'),error:val('e_error'),correct:val('e_correct'),cause:val('e_cause'),reviewed:false});save()}function toggleError(i){data.errors[i].reviewed=!data.errors[i].reviewed;save()}
+function renderSimulados(){$('simulados').innerHTML=`<div class="card"><h2>Novo simulado</h2><div class="form"><div><label>Nome</label><input id="m_name"></div><div><label>Concurso</label><input id="m_exam"></div><div><label>Questões</label><input id="m_qty" type="number"></div><div><label>Acertos</label><input id="m_hits" type="number"></div><div><label>Tempo (min)</label><input id="m_min" type="number"></div><div><label>Data</label><input id="m_date" type="date" value="${today()}"></div></div><div style="margin-top:10px"><button class="btn" onclick="addMock()">Registrar</button></div></div><div class="card scroll"><table><thead><tr><th>Data</th><th>Nome</th><th>Concurso</th><th>Questões</th><th>Acertos</th><th>%</th><th>Tempo</th></tr></thead><tbody>${data.mocks.slice().reverse().map(m=>`<tr><td>${br(m.date)}</td><td>${m.name}</td><td>${m.exam}</td><td>${m.qty}</td><td>${m.hits}</td><td>${pct(m.hits,m.qty)}%</td><td>${m.minutes} min</td></tr>`).join('')||'<tr><td colspan="7" class="muted">Nenhum simulado.</td></tr>'}</tbody></table></div>`}function addMock(){data.mocks.push({date:val('m_date')||today(),name:val('m_name'),exam:val('m_exam'),qty:+val('m_qty'),hits:+val('m_hits'),minutes:+val('m_min')});save()}
+function renderDesempenho(){let st=stats(),late=data.reviews.filter(r=>r.status!=='Concluída'&&r.date<today()).length;let rows=data.subjects.map(s=>{let p=prio(s);return `<tr><td>${s.name}</td><td>${s.importance}/5</td><td>${s.confidence}/5</td><td>${p.q}</td><td>${p.acc}%</td><td>${p.score}</td><td class="${p.cls}"><b>${p.label}</b></td></tr>`}).join('');$('desempenho').innerHTML=`<div class="grid g4"><div class="card"><div class="muted">Minutos</div><div class="metric">${st.mins}</div></div><div class="card"><div class="muted">Questões</div><div class="metric">${st.q}</div></div><div class="card"><div class="muted">Acerto</div><div class="metric">${st.acc}%</div></div><div class="card"><div class="muted">Revisões atrasadas</div><div class="metric">${late}</div></div></div><div class="card"><h2>Radar Pareto</h2><div class="small muted">Score transparente: importância × 20 + taxa de erro × 0,5 + (5 − confiança) × 10.</div><div class="scroll"><table><thead><tr><th>Matéria</th><th>Importância</th><th>Confiança</th><th>Questões</th><th>Acerto</th><th>Score</th><th>Prioridade</th></tr></thead><tbody>${rows}</tbody></table></div></div>`}
+function renderConfig(){$('config').innerHTML=`<div class="card"><h2>Configurações</h2><div class="form"><div><label>Meta diária (min)</label><input id="s_daily" type="number" value="${data.settings.daily}"></div><div><label>Revisões (dias separados por vírgula)</label><input id="s_review" value="${data.settings.review.join(',')}"></div></div><div class="row" style="margin-top:12px"><button class="btn" onclick="saveSettings()">Salvar</button><button class="btn ghost" onclick="resetAll()">Restaurar modelo</button></div><p class="small muted">Tudo fica salvo no próprio navegador nesta fase. Use Exportar para manter um backup em JSON.</p></div><div class="card"><h2>100% gratuito</h2><p>A V5 pode funcionar gratuitamente no GitHub Pages. Enquanto não houver banco online, os registros ficam neste navegador; Exportar/Importar serve como backup e transferência entre aparelhos.</p></div>`}function saveSettings(){data.settings.daily=+val('s_daily')||60;data.settings.review=val('s_review').split(',').map(x=>+x.trim()).filter(Boolean);save()}
+function toggleTheme(){data.settings.theme=data.settings.theme==='dark'?'light':'dark';save()}function applyTheme(){document.documentElement.setAttribute('data-theme',data.settings.theme||'light')}
+function exportData(){let b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='central-aprovacao-v5-backup.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files?.[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let obj=JSON.parse(r.result);if(!obj.settings||!obj.contests)throw 0;data=obj;save();alert('Backup importado.')}catch{alert('Arquivo de backup inválido.')}};r.readAsText(f)}
+function resetAll(){if(confirm('Apagar os dados e restaurar o modelo inicial?')){data=deepClone(baseSeed);save()}}
+
+function showInstallHelp(){
+  const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  if(isiOS){alert('No iPhone/iPad: abra esta Central pelo Safari, toque em Compartilhar e escolha “Adicionar à Tela de Início”. Ela passará a abrir como um app.');}
+  else if(window.matchMedia('(display-mode: standalone)').matches){alert('A Central já está aberta como aplicativo.');}
+  else{alert('Abra o menu do navegador e escolha “Instalar aplicativo” ou “Adicionar à tela inicial”, se essa opção estiver disponível.');}
+}
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+
+function renderAll(){applyTheme();renderHoje();renderAulas();renderBiblioteca();renderBanco();renderPlanner();renderEdital();renderConcursos();renderMaterias();renderCiclo();renderRevisoes();renderQuestoes();renderErros();renderSimulados();renderDesempenho();renderConfig()}
+nav();renderAll();$('subtitle').textContent=new Date().toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});localStorage.setItem('centralAprovacaoV6',JSON.stringify(data));
+</script>
+</body></html>
