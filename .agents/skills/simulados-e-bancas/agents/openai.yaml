@@ -1,6 +1,6 @@
 interface:
   display_name: simulados e bancas
-  short_description: Prepare questões autorais do assunto que eu indicar, sem gabari
+  short_description: "Cria simulados autorais e corrige respostas"
   default_prompt: Use $simulados-e-bancas. Prepare questões autorais do assunto que
     eu indicar, sem gabarito antes das minhas respostas.
 policy:

@@ -1,6 +1,6 @@
 interface:
   display_name: legislacao atualizada
-  short_description: Explique a norma que eu indicar e verifique a vigência em fonte
+  short_description: "Ensina legislação com fontes e verificação de vigência"
   default_prompt: Use $legislacao-atualizada. Explique a norma que eu indicar e verifique
     a vigência em fonte oficial quando acessível.
 policy:

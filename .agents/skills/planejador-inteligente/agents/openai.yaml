@@ -1,7 +1,6 @@
 interface:
   display_name: planejador inteligente
-  short_description: Organize meus estudos conforme meu edital, disponibilidade e
-    de
+  short_description: "Organiza ciclos e planos de estudo personalizados"
   default_prompt: Use $planejador-inteligente. Organize meus estudos conforme meu
     edital, disponibilidade e desempenho, declarando dados ausentes.
 policy:

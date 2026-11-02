@@ -1,6 +1,6 @@
 interface:
   display_name: diagnostico de desempenho
-  short_description: Analise os registros que eu fornecer e indique prioridades sem
+  short_description: "Analisa resultados e define prioridades de estudo"
   default_prompt: Use $diagnostico-de-desempenho. Analise os registros que eu fornecer
     e indique prioridades sem inventar causas de erro.
 policy:

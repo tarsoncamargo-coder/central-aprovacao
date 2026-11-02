@@ -1,6 +1,6 @@
 interface:
   display_name: laboratorio distratores
-  short_description: Analise as alternativas da questão que eu fornecer e crie trein
+  short_description: "Explica alternativas incorretas e treina erros típicos"
   default_prompt: Use $laboratorio-distratores. Analise as alternativas da questão
     que eu fornecer e crie treino autoral sem gabarito antecipado.
 policy:

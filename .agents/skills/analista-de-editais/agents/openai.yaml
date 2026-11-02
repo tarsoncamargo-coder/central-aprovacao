@@ -1,6 +1,6 @@
 interface:
   display_name: analista de editais
-  short_description: Analise o edital e retificações que eu fornecer ou que consegui
+  short_description: "Analisa editais, requisitos, datas e pesos de prova"
   default_prompt: Use $analista-de-editais. Analise o edital e retificações que eu
     fornecer ou que conseguir localizar em fonte oficial.
 policy:

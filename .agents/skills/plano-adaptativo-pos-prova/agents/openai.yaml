@@ -1,6 +1,6 @@
 interface:
   display_name: plano adaptativo pos prova
-  short_description: Reorganize minhas 12 horas semanais conforme edital e resultado
+  short_description: "Replaneja 12 horas semanais conforme edital e resultados"
   default_prompt: Use $plano-adaptativo-pos-prova. Reorganize minhas 12 horas semanais
     conforme edital e resultados fornecidos, incluindo redação e revisão.
 policy:

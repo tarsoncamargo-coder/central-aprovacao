@@ -1,6 +1,6 @@
 interface:
   display_name: rastreador provas oficiais
-  short_description: Localize provas e gabaritos do concurso que eu indicar e regist
+  short_description: "Localiza e confere provas e gabaritos anteriores"
   default_prompt: Use $rastreador-provas-oficiais. Localize provas e gabaritos do
     concurso que eu indicar e registre fontes e status de verificação.
 policy:
