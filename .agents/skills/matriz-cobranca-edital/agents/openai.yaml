@@ -1,0 +1,7 @@
+interface:
+  display_name: matriz cobranca edital
+  short_description: "Relaciona questões verificadas aos tópicos do edital"
+  default_prompt: Use $matriz-cobranca-edital. Cruze questões verificadas com os IDs
+    do edital informado, explicitando denominadores e lacunas.
+policy:
+  allow_implicit_invocation: true

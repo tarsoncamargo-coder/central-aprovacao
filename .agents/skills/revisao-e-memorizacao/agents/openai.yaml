@@ -1,0 +1,7 @@
+interface:
+  display_name: revisao e memorizacao
+  short_description: "Cria flashcards e revisões espaçadas adaptáveis"
+  default_prompt: Use $revisao-e-memorizacao. Transforme o conteúdo que eu fornecer
+    em flashcards e revisão espaçada adaptável.
+policy:
+  allow_implicit_invocation: true
