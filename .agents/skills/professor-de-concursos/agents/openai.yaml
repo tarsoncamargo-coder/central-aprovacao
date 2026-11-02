@@ -1,0 +1,8 @@
+interface:
+  display_name: professor de concursos
+  short_description: Ensine interpretação de texto para nível médio com exemplos e
+    t
+  default_prompt: Use $professor-de-concursos. Ensine interpretação de texto para
+    nível médio com exemplos e treino sem gabarito antecipado.
+policy:
+  allow_implicit_invocation: true

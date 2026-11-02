@@ -1,0 +1,8 @@
+interface:
+  display_name: engenharia reversa vunesp
+  short_description: Analise padrões das questões Vunesp efetivamente verificadas
+    e
+  default_prompt: Use $engenharia-reversa-vunesp. Analise padrões das questões Vunesp
+    efetivamente verificadas e relacione ao edital informado.
+policy:
+  allow_implicit_invocation: true

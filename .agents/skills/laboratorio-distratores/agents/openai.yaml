@@ -1,0 +1,7 @@
+interface:
+  display_name: laboratorio distratores
+  short_description: Analise as alternativas da questão que eu fornecer e crie trein
+  default_prompt: Use $laboratorio-distratores. Analise as alternativas da questão
+    que eu fornecer e crie treino autoral sem gabarito antecipado.
+policy:
+  allow_implicit_invocation: true

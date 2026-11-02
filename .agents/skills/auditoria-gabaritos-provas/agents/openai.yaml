@@ -1,0 +1,7 @@
+interface:
+  display_name: auditoria gabaritos provas
+  short_description: Confira versões, gabaritos, anulações e retificações dos docume
+  default_prompt: Use $auditoria-gabaritos-provas. Confira versões, gabaritos, anulações
+    e retificações dos documentos que eu fornecer.
+policy:
+  allow_implicit_invocation: true

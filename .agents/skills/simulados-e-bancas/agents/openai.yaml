@@ -1,0 +1,7 @@
+interface:
+  display_name: simulados e bancas
+  short_description: Prepare questões autorais do assunto que eu indicar, sem gabari
+  default_prompt: Use $simulados-e-bancas. Prepare questões autorais do assunto que
+    eu indicar, sem gabarito antes das minhas respostas.
+policy:
+  allow_implicit_invocation: true

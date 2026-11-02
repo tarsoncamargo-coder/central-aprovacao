@@ -1,0 +1,161 @@
+{
+  "skills": [
+    "analista-de-editais",
+    "auditoria-gabaritos-provas",
+    "diagnostico-de-desempenho",
+    "engenharia-reversa-vunesp",
+    "laboratorio-distratores",
+    "legislacao-atualizada",
+    "matriz-cobranca-edital",
+    "planejador-inteligente",
+    "plano-adaptativo-pos-prova",
+    "professor-de-concursos",
+    "rastreador-provas-oficiais",
+    "revisao-e-memorizacao",
+    "simulados-e-bancas"
+  ],
+  "prompts": {
+    "PROMPTS_PRONTOS.md": [
+      {
+        "id": 1,
+        "skills": [
+          "planejador-inteligente"
+        ]
+      },
+      {
+        "id": 2,
+        "skills": [
+          "professor-de-concursos"
+        ]
+      },
+      {
+        "id": 3,
+        "skills": [
+          "simulados-e-bancas",
+          "diagnostico-de-desempenho"
+        ]
+      },
+      {
+        "id": 4,
+        "skills": [
+          "simulados-e-bancas"
+        ]
+      },
+      {
+        "id": 5,
+        "skills": [
+          "simulados-e-bancas"
+        ]
+      },
+      {
+        "id": 6,
+        "skills": [
+          "revisao-e-memorizacao"
+        ]
+      },
+      {
+        "id": 7,
+        "skills": [
+          "analista-de-editais"
+        ]
+      },
+      {
+        "id": 8,
+        "skills": [
+          "legislacao-atualizada"
+        ]
+      },
+      {
+        "id": 9,
+        "skills": [
+          "diagnostico-de-desempenho"
+        ]
+      },
+      {
+        "id": 10,
+        "skills": [
+          "diagnostico-de-desempenho",
+          "planejador-inteligente"
+        ]
+      }
+    ],
+    "PROMPTS_ENGENHARIA_REVERSA.md": [
+      {
+        "id": 1,
+        "skills": [
+          "rastreador-provas-oficiais"
+        ]
+      },
+      {
+        "id": 2,
+        "skills": [
+          "auditoria-gabaritos-provas"
+        ]
+      },
+      {
+        "id": 3,
+        "skills": [
+          "engenharia-reversa-vunesp"
+        ]
+      },
+      {
+        "id": 4,
+        "skills": [
+          "matriz-cobranca-edital"
+        ]
+      },
+      {
+        "id": 5,
+        "skills": [
+          "engenharia-reversa-vunesp"
+        ]
+      },
+      {
+        "id": 6,
+        "skills": [
+          "matriz-cobranca-edital",
+          "legislacao-atualizada"
+        ]
+      },
+      {
+        "id": 7,
+        "skills": [
+          "laboratorio-distratores"
+        ]
+      },
+      {
+        "id": 8,
+        "skills": [
+          "legislacao-atualizada"
+        ]
+      },
+      {
+        "id": 9,
+        "skills": [
+          "engenharia-reversa-vunesp",
+          "simulados-e-bancas"
+        ]
+      },
+      {
+        "id": 10,
+        "skills": [
+          "diagnostico-de-desempenho"
+        ]
+      },
+      {
+        "id": 11,
+        "skills": [
+          "plano-adaptativo-pos-prova"
+        ]
+      },
+      {
+        "id": 12,
+        "skills": [
+          "rastreador-provas-oficiais",
+          "auditoria-gabaritos-provas",
+          "matriz-cobranca-edital"
+        ]
+      }
+    ]
+  }
+}

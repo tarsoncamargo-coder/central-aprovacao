@@ -8,6 +8,7 @@
 - [12 prompts de engenharia reversa](PROMPTS_ENGENHARIA_REVERSA.md): provas anteriores, auditoria, Vunesp/TJSP, distratores e plano adaptativo.
 - Substitua os campos entre colchetes antes de usar um prompt.
 - Informe banca, cargo, edital, assunto e tempo disponível quando souber. Na ausência desses dados, peça uma versão-base com hipóteses declaradas.
+- No Codex, basta pedir a tarefa em linguagem natural: as 13 skills permitem seleção implícita. Os 22 prompts estão associados às skills em [catalogo.json](catalogo.json).
 
 ## Catálogo das 13 skills
 
@@ -30,9 +31,10 @@
 ## Uso no Codex
 
 1. Abra o repositório `central-aprovacao` na branch `feat/radar-de-estudos-skills`.
-2. Inicie uma sessão no diretório do repositório para permitir a descoberta de `.agents/skills/<nome>/SKILL.md`.
-3. Consulte o catálogo de skills da sessão. Se houver suporte à chamada por nome, use, por exemplo, `$professor-de-concursos`.
-4. Se a skill não aparecer, solicite explicitamente a leitura do arquivo e a aplicação das instruções. A leitura manual permite usar o método, mas não comprova descoberta automática.
+2. Inicie a sessão na raiz do repositório ou em `estudos-concursos`. O Codex descobre `.agents/skills/<nome>/SKILL.md`; a descoberta real das 13 skills foi confirmada no Codex CLI 0.163.0.
+3. Peça diretamente, por exemplo: “Ensine interpretação de texto e depois corrija minhas respostas”. O Codex pode selecionar a skill pela descrição, sem exigir nome ou comando. Todas possuem `policy.allow_implicit_invocation: true` em `agents/openai.yaml`.
+4. No diretório `estudos-concursos`, o [AGENTS.md local](AGENTS.md) também orienta a seleção conforme o objetivo. Para escolha explícita, use `$professor-de-concursos` ou outra skill.
+5. Se um ambiente mantiver um catálogo antigo, recarregue a sessão na branch correta. A automação depende de esse ambiente carregar os arquivos do repositório; não instala skills globalmente em outras conversas.
 
 Exemplo que funciona por leitura explícita:
 
@@ -65,11 +67,24 @@ Para começar a análise de provas:
 - Questões autorais devem ser identificadas como tais; não são questões oficiais.
 - Legislação exige fonte e data de verificação; se não houver acesso, a vigência deve ser marcada como não confirmada.
 
-## Estado de verificação
+## Automação e verificação
 
-Em 02/11/2026, foram conferidos os 13 arquivos SKILL.md: todos apresentam metadados name e description, com nome correspondente à pasta. Os dois arquivos de prompts totalizam 22 entradas numeradas (10 + 12).
+Em 02/11/2026, foram conferidos os 13 arquivos SKILL.md e habilitada explicitamente a invocação implícita de todos. A consulta real `skills/list` do Codex reconheceu 13 skills do repositório habilitadas, sem erros. Os dois arquivos de prompts totalizam 22 entradas numeradas (10 + 12), com rotas para skills verificadas.
 
-A skill professor-de-concursos foi demonstrada em uma aula de interpretação de texto. A correção interativa depende das respostas do candidato. As outras 12 skills ainda não passaram por testes completos de execução; a conferência estrutural não equivale a validação funcional. A descoberta automática depende do ambiente e deve ser confirmada na sessão do Codex.
+As 13 skills passaram por testes funcionais controlados: aula e correção, simulado, revisão, diagnóstico, planejamento, análise de fixture de edital, tratamento de norma não identificada, busca sem identificadores, auditoria de versões e análise de questões sintéticas. Consulte o [relatório com os cenários e resultados](VALIDACAO_SKILLS.md). Esses testes não representam consulta de documentos oficiais reais.
+
+O workflow `.github/workflows/radar-skills.yml` verifica automaticamente alterações relevantes em skills, prompts, catálogo e testes. Detecta skill ausente, nome incompatível, seleção implícita desabilitada, prompt sem rota, destino inexistente e link local quebrado.
+
+Para reproduzir na raiz do repositório:
+
+```sh
+python3 -m pip install -r estudos-concursos/requirements-validacao.txt
+python3 estudos-concursos/scripts/validar_radar.py
+python3 -m unittest discover -s estudos-concursos/tests -v
+python3 estudos-concursos/scripts/verificar_descoberta_codex.py
+```
+
+O último comando usa o Codex CLI instalado para testar descoberta real sem chamar um modelo; a integração contínua executa os três primeiros comandos. Fontes oficiais e resultados do candidato continuam sendo entradas de cada tarefa, não dados presumidos pela automação.
 
 ## Isolamento
 
